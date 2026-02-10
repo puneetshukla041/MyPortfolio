@@ -220,14 +220,15 @@ const Section1 = () => {
     setBuildStep(1);
     setTerminalLogs([]);
     
+    // FAST COMPILATION
     const steps = [
-      { msg: "> pnpm run build", delay: 300 },
-      { msg: "wait  - compiling...", delay: 800 },
-      { msg: "event - compiled client and server successfully in 841 ms", delay: 1400, color: '#4ec9b0' },
-      { msg: "info  - Collecting page data...", delay: 1900 },
-      { msg: "info  - Generating static pages (3/3)", delay: 2400 },
-      { msg: "info  - Finalizing page optimization...", delay: 2800 },
-      { msg: "✓ Build complete. Ready for production.", delay: 3200, success: true, color: '#4ec9b0' },
+      { msg: "> pnpm run build", delay: 100 }, // Faster start
+      { msg: "wait  - compiling...", delay: 300 },
+      { msg: "event - compiled client and server successfully in 841 ms", delay: 600, color: '#4ec9b0' },
+      { msg: "info  - Collecting page data...", delay: 900 },
+      { msg: "info  - Generating static pages (3/3)", delay: 1200 },
+      { msg: "info  - Finalizing page optimization...", delay: 1500 },
+      { msg: "✓ Build complete. Ready for production.", delay: 1800, success: true, color: '#4ec9b0' },
     ];
     
     let cumulativeDelay = 0;
@@ -438,8 +439,8 @@ const Section1 = () => {
               <div className="p-3 text-[12px] text-[#cccccc]">
                  <p className="mb-3">Run build task?</p>
                  <div className="flex gap-2">
-                   <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleRunCode} className="bg-[#007acc] text-white px-3 py-1.5 rounded-md text-[11px] cursor-pointer">Run</motion.button>
-                   <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowToast(false)} className="bg-[#3c3c3c] text-white px-3 py-1.5 rounded-md text-[11px] cursor-pointer">Dismiss</motion.button>
+                   <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleRunCode} className="bg-[#007acc] text-white px-3 py-1.5 rounded-md text-[11px] cursor-pointer shadow-lg">Run</motion.button>
+                   <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setShowToast(false)} className="bg-[#3c3c3c] text-white px-3 py-1.5 rounded-md text-[11px] cursor-pointer shadow-lg">Dismiss</motion.button>
                  </div>
               </div>
             </motion.div>
@@ -459,9 +460,9 @@ const Section1 = () => {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleDeploymentAction} 
-                  className="bg-[#007acc] text-white px-4 py-2 rounded-lg shadow-xl flex items-center gap-2 text-xs font-medium hover:bg-[#006bb3] cursor-pointer"
+                  className="bg-[#007acc] text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-2 text-xs font-bold tracking-wide hover:bg-[#006bb3] cursor-pointer border border-white/5 transition-all"
                 >
-                  <Download size={14} /> Deployment Complete. Download Resume.
+                  <Download size={14} strokeWidth={2.5} /> Deployment Complete. Download Resume.
                 </motion.button>
              </motion.div>
           )}
@@ -493,7 +494,7 @@ const Section1 = () => {
                         {log}
                     </motion.div>
                  ))}
-                 {buildStep === 2 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 text-[#4ec9b0]">Done in 4.82s. <span className="text-white animate-pulse">_</span></motion.div>}
+                 {buildStep === 2 && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 text-[#4ec9b0]">Done in 1.82s. <span className="text-white animate-pulse">_</span></motion.div>}
               </div>
             </motion.div>
           )}
