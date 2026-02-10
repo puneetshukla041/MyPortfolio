@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from 'framer-motion';
 import { 
   Code2, 
   Database, 
@@ -10,17 +10,13 @@ import {
   Terminal, 
   Globe, 
   Server,
-  Box,
   Zap,
   GitBranch,
   Monitor,
-  FileType,
   Hash,
-  Filter,
-  Calendar,
-  Building2,
   Layers
 } from 'lucide-react';
+import Image from 'next/image';
 
 // --- TYPES ---
 type CategoryType = 'ALL' | 'FRONTEND' | 'BACKEND' | 'TOOLS';
@@ -34,16 +30,17 @@ interface Skill {
   id: string;
   name: string;
   icon: React.ReactNode;
-  level: number; // 0 to 100
+  level: number;
   category: 'FRONTEND' | 'BACKEND' | 'TOOLS';
   tag: string;
   year: string;
   companies?: Company[];
+  description: string;
 }
 
 // --- CONFIG ---
 const LOGOS = {
-  SS: "/logos/ssilogo.png",
+  SS: "/logos/ssi.jpeg",
   DISNEY: "/logos/disney.webp",
   MEDANTA: "/logos/medanta.png"
 };
@@ -60,235 +57,227 @@ const SKILLS: Skill[] = [
   { 
     id: 'next', 
     name: "Next.js 14", 
-    icon: <Globe size={18}/>, 
+    icon: <Globe size={24} />, 
     level: 99, 
     category: 'FRONTEND', 
-    tag: "Framework",
+    tag: "Core Framework", 
     year: "2024",
-    companies: [CO_DATA.SS]
+    companies: [CO_DATA.SS],
+    description: "Server Actions, App Router, SSR."
   },
   { 
     id: 'react', 
-    name: "React.js", 
-    icon: <Layout size={18}/>, 
+    name: "React Ecosystem", 
+    icon: <Layout size={24} />, 
     level: 98, 
     category: 'FRONTEND', 
-    tag: "Library",
+    tag: "UI Library", 
     year: "2023",
-    companies: [CO_DATA.DISNEY, CO_DATA.SS] // Common skill implies spread, added SS for consistency if needed, but keeping strictly to prompt for others
+    companies: [CO_DATA.DISNEY, CO_DATA.SS],
+    description: "Hooks, Context, Custom Patterns."
   },
   { 
     id: 'ts', 
     name: "TypeScript", 
-    icon: <Code2 size={18}/>, 
+    icon: <Code2 size={24} />, 
     level: 96, 
     category: 'FRONTEND', 
-    tag: "Language",
+    tag: "Language", 
     year: "2023",
-    companies: [CO_DATA.SS]
+    companies: [CO_DATA.SS],
+    description: "Strict typing, Interfaces, Generics."
   },
   { 
     id: 'framer', 
     name: "Framer Motion", 
-    icon: <Zap size={18}/>, 
+    icon: <Zap size={24} />, 
     level: 95, 
     category: 'FRONTEND', 
-    tag: "Animation",
+    tag: "Animation", 
     year: "2024",
-    companies: [CO_DATA.DISNEY, CO_DATA.SS]
+    companies: [CO_DATA.DISNEY, CO_DATA.SS],
+    description: "Complex gestures & layout animations."
   },
   { 
     id: 'tailwind', 
     name: "Tailwind CSS", 
-    icon: <Layers size={18}/>, 
+    icon: <Layers size={24} />, 
     level: 98, 
     category: 'FRONTEND', 
-    tag: "Styling",
+    tag: "Design System", 
     year: "2023",
-    companies: [CO_DATA.SS]
+    companies: [CO_DATA.SS],
+    description: "Advanced config & responsive design."
   },
-  { 
-    id: 'bootstrap', 
-    name: "Bootstrap", 
-    icon: <FileType size={18}/>, 
-    level: 95, 
-    category: 'FRONTEND', 
-    tag: "UI Kit",
-    year: "2021",
-    companies: [CO_DATA.DISNEY]
-  },
-  
+
   // BACKEND
   { 
     id: 'node', 
     name: "Node.js", 
-    icon: <Server size={18}/>, 
+    icon: <Server size={24} />, 
     level: 90, 
     category: 'BACKEND', 
-    tag: "Runtime",
+    tag: "Runtime", 
     year: "2022",
-    companies: [CO_DATA.DISNEY]
+    companies: [CO_DATA.DISNEY],
+    description: "High-concurrency microservices."
   },
   { 
     id: 'mongo', 
     name: "MongoDB", 
-    icon: <Database size={18}/>, 
+    icon: <Database size={24} />, 
     level: 88, 
     category: 'BACKEND', 
-    tag: "NoSQL",
+    tag: "NoSQL", 
     year: "2023",
-    // Common in Disney and SS
-    companies: [CO_DATA.DISNEY, CO_DATA.SS]
+    companies: [CO_DATA.DISNEY, CO_DATA.SS],
+    description: "Aggregation pipelines & indexing."
   },
   { 
     id: 'python', 
     name: "Python", 
-    icon: <Terminal size={18}/>, 
+    icon: <Terminal size={24} />, 
     level: 85, 
     category: 'BACKEND', 
-    tag: "Scripting",
+    tag: "Scripting", 
     year: "2020",
-    companies: [CO_DATA.MEDANTA]
+    companies: [CO_DATA.MEDANTA],
+    description: "Automation & Data Analysis."
   },
   { 
     id: 'sql', 
-    name: "SQL", 
-    icon: <Hash size={18}/>, 
+    name: "PostgreSQL", 
+    icon: <Hash size={24} />, 
     level: 80, 
     category: 'BACKEND', 
-    tag: "Database",
+    tag: "Relational DB", 
     year: "2021",
-    companies: [CO_DATA.MEDANTA]
+    companies: [CO_DATA.MEDANTA],
+    description: "Complex queries & normalization."
   },
 
   // TOOLS
   { 
     id: 'git', 
-    name: "Git / GitHub", 
-    icon: <GitBranch size={18}/>, 
+    name: "Git & CI/CD", 
+    icon: <GitBranch size={24} />, 
     level: 92, 
     category: 'TOOLS', 
-    tag: "DevOps",
+    tag: "DevOps", 
     year: "2022",
-    // Common in Disney and SS (and Medanta from before)
-    companies: [CO_DATA.MEDANTA, CO_DATA.DISNEY, CO_DATA.SS]
-  },
-  { 
-    id: 'electron', 
-    name: "Electron.js", 
-    icon: <Monitor size={18}/>, 
-    level: 82, 
-    category: 'TOOLS', 
-    tag: "Desktop",
-    year: "2024",
-    companies: [CO_DATA.SS]
+    companies: [CO_DATA.MEDANTA, CO_DATA.DISNEY, CO_DATA.SS],
+    description: "Version control & GitHub Actions."
   },
   { 
     id: 'aws', 
-    name: "AWS Services", 
-    icon: <Cloud size={18}/>, 
+    name: "AWS", 
+    icon: <Cloud size={24} />, 
     level: 75, 
     category: 'TOOLS', 
-    tag: "Cloud",
+    tag: "Cloud", 
     year: "2024",
-    // Common in Disney and SS
-    companies: [CO_DATA.SS, CO_DATA.DISNEY]
+    companies: [CO_DATA.SS, CO_DATA.DISNEY],
+    description: "EC2, S3, Lambda, SES."
   },
   { 
-    id: 'capacitor', 
-    name: "Capacitor", 
-    icon: <Box size={18}/>, 
-    level: 80, 
+    id: 'electron', 
+    name: "Electron", 
+    icon: <Monitor size={24} />, 
+    level: 82, 
     category: 'TOOLS', 
-    tag: "Mobile",
-    year: "2023",
-    companies: [CO_DATA.SS] 
+    tag: "Desktop", 
+    year: "2024",
+    companies: [CO_DATA.SS],
+    description: "Cross-platform desktop apps."
   },
 ];
 
 const FILTERS: { id: CategoryType; label: string }[] = [
-  { id: 'ALL', label: 'All Stack' },
-  { id: 'FRONTEND', label: 'Frontend' },
-  { id: 'BACKEND', label: 'Backend' },
-  { id: 'TOOLS', label: 'Tools' },
+  { id: 'ALL', label: 'Ecosystem' },
+  { id: 'FRONTEND', label: 'Interface' },
+  { id: 'BACKEND', label: 'Core' },
+  { id: 'TOOLS', label: 'Infrastructure' },
 ];
 
 export default function Section6() {
   const [activeFilter, setActiveFilter] = useState<CategoryType>('ALL');
 
-  // --- FILTER ALGORITHM ---
   const filteredSkills = SKILLS.filter(skill => {
     if (activeFilter === 'ALL') return true;
     return skill.category === activeFilter;
   });
 
   return (
-    <section className="relative min-h-screen bg-transparent text-zinc-100 font-sans py-24 md:py-32 z-10">
+    <section className="relative min-h-screen bg-transparent text-white font-sans py-24 md:py-32 overflow-hidden">
       
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         
         {/* --- HEADER --- */}
-        <div className="flex flex-col items-center text-center mb-16">
-          <h2 className="text-xs font-mono text-zinc-500 mb-4 tracking-[0.3em] uppercase flex items-center gap-2">
-            <Filter size={12} className="text-emerald-500" />
-            Technical Arsenal
-          </h2>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-6">
-            Full Stack <span className="text-zinc-600">Architecture.</span>
-          </h1>
-          
-          {/* --- FILTER CONTROLS --- */}
-          <div className="flex flex-wrap justify-center gap-2 p-1 bg-white/5 border border-white/10 rounded-full backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+              <span className="text-xs font-medium tracking-widest text-zinc-500 uppercase">Technical Arsenal</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white">
+              Engineering <br/> <span className="text-zinc-600">Ecosystem.</span>
+            </h1>
+          </div>
+
+          {/* --- IOS STYLE SEGMENTED CONTROL --- */}
+          <div className="p-1 bg-white/5 border border-white/10 rounded-full backdrop-blur-2xl flex gap-1 shadow-2xl">
             {FILTERS.map((filter) => (
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                className={`relative px-6 py-2 text-xs md:text-sm font-medium rounded-full transition-colors duration-300 z-10
-                  ${activeFilter === filter.id ? 'text-black' : 'text-zinc-400 hover:text-white'}
+                className={`
+                  relative px-5 py-2.5 rounded-full text-xs font-medium transition-all duration-300 cursor-pointer
+                  ${activeFilter === filter.id ? 'text-black' : 'text-zinc-400 hover:text-white hover:bg-white/5'}
                 `}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
-                {/* Sliding White Background Pill */}
                 {activeFilter === filter.id && (
                   <motion.div
-                    layoutId="activeFilter"
-                    className="absolute inset-0 bg-white rounded-full -z-10"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    layoutId="pill"
+                    className="absolute inset-0 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
-                {filter.label}
+                <span className="relative z-10 mix-blend-multiply">{filter.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* --- DYNAMIC GRID --- */}
+        {/* --- BENTO GRID --- */}
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
         >
           <AnimatePresence mode='popLayout'>
             {filteredSkills.map((skill) => (
               <motion.div
                 layout
                 key={skill.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className={`${skill.category === 'FRONTEND' && activeFilter === 'ALL' ? 'md:col-span-2' : 'col-span-1'}`}
               >
-                <SkillCard skill={skill} />
+                <BentoCard skill={skill} />
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* --- FOOTER METRICS --- */}
-        <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-zinc-500 font-mono">
-           <div className="flex items-center gap-2 mb-4 md:mb-0">
-             <Filter size={14} />
-             <span>Showing {filteredSkills.length} of {SKILLS.length} Technologies</span>
-           </div>
-           <span>Code Quality: A+</span>
+        {/* --- FOOTER STATUS BAR --- */}
+        <div className="mt-12 flex justify-between items-center py-4 border-t border-white/5 text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
+            <span className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+                System Status: Optimal
+            </span>
+            <span>{filteredSkills.length} Modules Loaded</span>
         </div>
 
       </div>
@@ -296,93 +285,105 @@ export default function Section6() {
   );
 }
 
-// --- CARD COMPONENT ---
+// --- BENTO CARD WITH SPOTLIGHT & APPLE FEEL ---
+const BentoCard = ({ skill }: { skill: Skill }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-const SkillCard = ({ skill }: { skill: Skill }) => {
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
   return (
-    <div className="group relative h-full bg-zinc-900/40 border border-white/5 hover:border-white/20 rounded-xl p-5 backdrop-blur-sm transition-all duration-300 hover:bg-zinc-800/50 flex flex-col">
-      
-      {/* Header with Icon & Tag */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="p-2.5 bg-black/50 rounded-lg border border-white/5 text-zinc-300 group-hover:text-white group-hover:border-white/20 transition-colors">
-          {skill.icon}
-        </div>
-        <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-600 border border-zinc-800 px-2 py-1 rounded bg-black/20">
-          {skill.tag}
-        </span>
-      </div>
+    <motion.div
+      onMouseMove={handleMouseMove}
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="group relative h-full bg-black/40 border border-white/10 rounded-3xl overflow-hidden hover:border-white/20 transition-colors duration-500 cursor-pointer"
+    >
+      {/* Spotlight Effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(255, 255, 255, 0.08),
+              transparent 80%
+            )
+          `,
+        }}
+      />
 
-      {/* Title */}
-      <div className="mb-4 flex-grow">
-        <h3 className="text-white font-bold text-lg">{skill.name}</h3>
-        <p className="text-zinc-500 text-xs mt-1">Proficiency Level</p>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: `${skill.level}%` }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className={`h-full rounded-full ${
-              skill.level >= 95 ? 'bg-emerald-500' :
-              skill.level >= 85 ? 'bg-blue-500' : 
-              'bg-zinc-400'
-            }`}
-          />
-        </div>
-        <span className="text-xs font-mono font-bold text-white">{skill.level}%</span>
-      </div>
-
-      {/* Footer: Company & Year */}
-      <div className="pt-4 border-t border-white/5 flex items-center justify-between mt-auto">
+      <div className="relative z-20 h-full p-6 flex flex-col justify-between">
         
-        {/* Company Info */}
-        <div className="flex items-center gap-2">
-          {skill.companies && skill.companies.length > 0 ? (
-            <div className="flex items-center">
-              {/* Logo Stack */}
-              <div className="flex -space-x-2 mr-2">
-                {skill.companies.map((company, index) => (
-                  <div 
-                    key={index} 
-                    className="w-5 h-5 rounded-full overflow-hidden bg-white/10 flex items-center justify-center border border-zinc-900 relative z-10"
-                    title={company.name}
-                  >
-                    <img 
-                      src={company.logo} 
-                      alt={company.name} 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-              
-              {/* Name Display: List all names comma separated */}
-              <span className="text-[10px] text-zinc-400 font-medium truncate max-w-[80px] md:max-w-[100px]" title={skill.companies.map(c => c.name).join(', ')}>
-                {skill.companies.map(c => c.name).join(', ')}
-              </span>
+        {/* Top Section */}
+        <div className="flex justify-between items-start mb-8">
+            <div className="p-3 bg-zinc-900/80 rounded-2xl border border-white/5 text-white shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+              {skill.icon}
             </div>
-          ) : (
-            // Placeholder for self-taught/other
-            <div className="flex items-center gap-2 opacity-50">
-               <Building2 size={12} className="text-zinc-600"/>
-               <span className="text-[10px] text-zinc-600">Self-taught</span>
+            <span className="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[10px] font-medium text-zinc-400 uppercase tracking-wide group-hover:bg-white/10 transition-colors">
+              {skill.tag}
+            </span>
+        </div>
+
+        {/* Middle Section */}
+        <div>
+          <h3 className="text-xl font-semibold text-white mb-1 group-hover:text-emerald-400 transition-colors">
+            {skill.name}
+          </h3>
+          <p className="text-sm text-zinc-500 line-clamp-2 mb-4 group-hover:text-zinc-400 transition-colors">
+            {skill.description}
+          </p>
+          
+          {/* Companies Mini-Dock */}
+          {skill.companies && (
+            <div className="flex items-center gap-[-8px] mb-4">
+               <div className="flex -space-x-2">
+                 {skill.companies.map((c, i) => (
+                    <div 
+                        key={i} 
+                        className="w-6 h-6 rounded-full border border-zinc-900 bg-zinc-800 overflow-hidden relative z-0 hover:z-10 transition-all hover:scale-125 cursor-pointer"
+                        title={c.name}
+                    >
+                       <Image 
+                         src={c.logo} 
+                         alt={c.name} 
+                         fill
+                         className="object-cover opacity-80 hover:opacity-100"
+                       />
+                    </div>
+                 ))}
+               </div>
+               <span className="ml-3 text-[10px] text-zinc-600 font-medium">
+                  {skill.year}
+               </span>
             </div>
           )}
         </div>
 
-        {/* Year */}
-        <div className="flex items-center gap-1.5 text-zinc-500 bg-white/5 px-2 py-0.5 rounded-md">
-          <Calendar size={10} />
-          <span className="text-[10px] font-mono">{skill.year}</span>
+        {/* Bottom Progress Line */}
+        <div className="mt-auto pt-4 border-t border-white/5">
+             <div className="flex justify-between items-end mb-2">
+                <span className="text-[10px] text-zinc-600 font-mono">MASTERY</span>
+                <span className="text-xs font-mono text-emerald-500">{skill.level}%</span>
+             </div>
+             <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${skill.level}%` }}
+                  transition={{ duration: 1.5, ease: "circOut" }}
+                  className={`h-full rounded-full ${
+                    skill.level > 90 ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-zinc-500'
+                  }`}
+                />
+             </div>
         </div>
-      </div>
 
-    </div>
+      </div>
+    </motion.div>
   );
 };
