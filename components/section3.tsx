@@ -215,10 +215,7 @@ export default function Section6() {
         {/* --- HEADER --- */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-              <span className="text-xs font-medium tracking-widest text-zinc-500 uppercase">Technical Arsenal</span>
-            </div>
+            {/* REMOVED: Green dot & Technical Arsenal text */}
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter text-white">
               Engineering <br/> <span className="text-zinc-600">Ecosystem.</span>
             </h1>
@@ -270,8 +267,6 @@ export default function Section6() {
             ))}
           </AnimatePresence>
         </motion.div>
-
-        {/* --- FOOTER STATUS BAR REMOVED --- */}
 
       </div>
     </section>
