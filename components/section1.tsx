@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useRef, useMemo, memo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Play, FileJson, CheckCircle2, Loader2, 
@@ -168,6 +168,54 @@ const Section1 = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // --- Handlers ---
+  const handleTabClick = (tab: TabName) => {
+    if (!openTabs.includes(tab)) setOpenTabs([...openTabs, tab]);
+    setActiveTab(tab);
+    if (isMobile) setIsSidebarOpen(false);
+  };
+
+  const handleCloseTab = (e: React.MouseEvent, tab: TabName) => {
+    e.stopPropagation();
+    const newTabs = openTabs.filter(t => t !== tab);
+    setOpenTabs(newTabs);
+    if (activeTab === tab && newTabs.length > 0) {
+      setActiveTab(newTabs[newTabs.length - 1]);
+    }
+  };
+
+  // Wrapped in useCallback to be safely called from useEffect
+  const handleRunCode = useCallback(() => {
+    if (isRunning) return;
+    setIsRunning(true);
+    setShowToast(false);
+    setIsTerminalOpen(true);
+    setBuildStep(1);
+    setTerminalLogs([]);
+    
+    const steps = [
+      { msg: "> pnpm run build", delay: 300 },
+      { msg: "wait  - compiling...", delay: 800 },
+      { msg: "event - compiled client and server successfully in 841 ms", delay: 1400, color: '#4ec9b0' },
+      { msg: "info  - Collecting page data...", delay: 1900 },
+      { msg: "info  - Generating static pages (3/3)", delay: 2400 },
+      { msg: "info  - Finalizing page optimization...", delay: 2800 },
+      { msg: "✓ Build complete. Ready for production.", delay: 3200, success: true, color: '#4ec9b0' },
+    ];
+    steps.forEach((step) => {
+      setTimeout(() => {
+        setTerminalLogs(prev => [...prev, step.msg]);
+        if (step.success) { setBuildStep(2); setIsRunning(false); }
+      }, step.delay);
+    });
+  }, [isRunning]); // Dependencies
+
+  const handleScrollDown = () => {
+    const nextSection = document.getElementById('section2');
+    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
+    else window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+  };
+
   // --- Effects ---
 
   // Detect Mobile
@@ -198,79 +246,35 @@ const Section1 = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // OPTIMIZATION: Improved Typing Effect
+  // OPTIMIZATION: FAST Typing Effect + Auto Run
   useEffect(() => {
     if (activeTab === 'developer.ts' && !isRunning && typedCode.length === 0) {
       setIsTypingComplete(false);
       let i = 0;
       const code = FILES_CONTENT['developer.ts'];
       
+      // Extremely fast interval (2ms)
       const interval = setInterval(() => {
-        setTypedCode(code.substring(0, i + 1));
-        i++;
+        // Type 3 characters at once for speed
+        setTypedCode(code.substring(0, i + 3));
+        i += 3;
         
         if (i > code.length) {
           clearInterval(interval);
           setIsTypingComplete(true);
+          // Auto-run logic: Trigger handleRunCode automatically after 500ms
           setTimeout(() => {
-            setBuildStep(prev => prev === 0 ? prev : prev); 
-            setShowToast(true);
-          }, 800);
+            // We bypass the toast and directly run the code
+            handleRunCode();
+          }, 500);
         }
-      }, 12); 
+      }, 5); 
       return () => clearInterval(interval);
     } else {
         setIsTypingComplete(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
-
-  // --- Handlers ---
-  const handleTabClick = (tab: TabName) => {
-    if (!openTabs.includes(tab)) setOpenTabs([...openTabs, tab]);
-    setActiveTab(tab);
-    if (isMobile) setIsSidebarOpen(false);
-  };
-
-  const handleCloseTab = (e: React.MouseEvent, tab: TabName) => {
-    e.stopPropagation();
-    const newTabs = openTabs.filter(t => t !== tab);
-    setOpenTabs(newTabs);
-    if (activeTab === tab && newTabs.length > 0) {
-      setActiveTab(newTabs[newTabs.length - 1]);
-    }
-  };
-
-  const handleRunCode = () => {
-    if (isRunning) return;
-    setIsRunning(true);
-    setShowToast(false);
-    setIsTerminalOpen(true);
-    setBuildStep(1);
-    setTerminalLogs([]);
-    
-    const steps = [
-      { msg: "> pnpm run build", delay: 300 },
-      { msg: "wait  - compiling...", delay: 1000 },
-      { msg: "event - compiled client and server successfully in 1241 ms", delay: 1800, color: '#4ec9b0' },
-      { msg: "info  - Collecting page data...", delay: 2400 },
-      { msg: "info  - Generating static pages (3/3)", delay: 3200 },
-      { msg: "info  - Finalizing page optimization...", delay: 4000 },
-      { msg: "✓ Build complete. Ready for production.", delay: 4800, success: true, color: '#4ec9b0' },
-    ];
-    steps.forEach((step) => {
-      setTimeout(() => {
-        setTerminalLogs(prev => [...prev, step.msg]);
-        if (step.success) { setBuildStep(2); setIsRunning(false); }
-      }, step.delay);
-    });
-  };
-
-  const handleScrollDown = () => {
-    const nextSection = document.getElementById('section2');
-    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
-    else window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
-  };
+  }, [activeTab]); // Removed handleRunCode to prevent loop, relying on closure or safe ref
 
   // --- RENDER SIDEBAR CONTENT ---
   const renderSidebarContent = () => {
@@ -621,9 +625,6 @@ const Section1 = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* STATUS BAR REMOVED HERE */}
-
       </div>
     </section>
   );
