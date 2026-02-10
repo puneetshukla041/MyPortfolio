@@ -74,7 +74,7 @@ Run the build command to see the magic happen.`
 
 // --- Sub-Components ---
 
-// OPTIMIZATION: Memoized Tooltip to prevent re-renders on parent state changes
+// OPTIMIZATION: Memoized Tooltip
 const Tooltip = memo(({ text, children }: { text: string, children: React.ReactNode }) => {
   const [show, setShow] = useState(false);
   return (
@@ -83,8 +83,12 @@ const Tooltip = memo(({ text, children }: { text: string, children: React.ReactN
       <AnimatePresence>
         {show && (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-            className="hidden md:block absolute left-14 px-2 py-1 bg-[#252526] text-[#cccccc] text-[11px] border border-white/10 shadow-xl z-50 whitespace-nowrap pointer-events-none"
+            // APPLE STYLE: Snappy spring pop-in
+            initial={{ opacity: 0, scale: 0.85, x: 10 }} 
+            animate={{ opacity: 1, scale: 1, x: 0 }} 
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            className="hidden md:block absolute left-14 px-2 py-1 bg-[#252526] text-[#cccccc] text-[11px] border border-white/10 shadow-xl z-50 whitespace-nowrap pointer-events-none rounded-md"
           >
             {text}
           </motion.div>
@@ -95,9 +99,8 @@ const Tooltip = memo(({ text, children }: { text: string, children: React.ReactN
 });
 Tooltip.displayName = 'Tooltip';
 
-// OPTIMIZATION: Memoized Syntax Highlighter + Heavy logic optimization
+// OPTIMIZATION: Memoized Syntax Highlighter
 const CodeRenderer = memo(({ code, lang }: { code: string, lang: string }) => {
-    // Memoize the line splitting so it doesn't run on every prop change if code length is same
     const lines = useMemo(() => code.split('\n'), [code]);
 
     return (
@@ -106,7 +109,6 @@ const CodeRenderer = memo(({ code, lang }: { code: string, lang: string }) => {
           <div key={i} className="table-row group">
              <span className="table-cell text-right pr-4 md:pr-6 text-[#6e7681] select-none w-8 md:w-10 text-[12px] md:text-[13px] group-hover:text-[#c6c6c6] transition-colors">{i + 1}</span>
              <span className="table-cell">
-               {/* Simplified tokenization for performance */}
                {line.split(/(\s+|[{}()[\],:;'"=])/g).map((token, j) => {
                  let color = "#d4d4d4";
                  if (lang === 'ts') {
@@ -176,7 +178,6 @@ const Section1 = () => {
       if (mobile) setIsSidebarOpen(false); 
     };
     checkMobile();
-    // Optimization: Debounce resize event if needed, but simple check is okay here
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -204,17 +205,14 @@ const Section1 = () => {
       let i = 0;
       const code = FILES_CONTENT['developer.ts'];
       
-      // Increased interval from 3ms to 12ms (approx 90fps) to reduce React render strain
       const interval = setInterval(() => {
         setTypedCode(code.substring(0, i + 1));
         i++;
         
-        // Safety break
         if (i > code.length) {
           clearInterval(interval);
           setIsTypingComplete(true);
           setTimeout(() => {
-            // Functional state update to ensure we don't use stale state
             setBuildStep(prev => prev === 0 ? prev : prev); 
             setShowToast(true);
           }, 800);
@@ -222,7 +220,6 @@ const Section1 = () => {
       }, 12); 
       return () => clearInterval(interval);
     } else {
-        // If we switch back to the tab, show immediately
         setIsTypingComplete(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -280,7 +277,11 @@ const Section1 = () => {
     switch (activeView) {
       case 'EXPLORER':
         return (
-          <>
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
             <div className="px-5 py-3 text-[11px] tracking-wide text-[#bbbbbb] flex justify-between items-center bg-transparent select-none cursor-pointer">
               EXPLORER <MoreHorizontal size={14} className="cursor-pointer" />
             </div>
@@ -307,11 +308,15 @@ const Section1 = () => {
                 </div>
               ))}
             </div>
-          </>
+          </motion.div>
         );
       case 'SEARCH':
         return (
-          <>
+          <motion.div
+            initial={{ opacity: 0, x: -10 }} 
+            animate={{ opacity: 1, x: 0 }} 
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
              <div className="px-5 py-3 text-[11px] tracking-wide text-[#bbbbbb] flex justify-between">SEARCH</div>
              <div className="px-4 mb-4">
                <div className="bg-neutral-900 flex items-center px-2 py-1 rounded-sm border border-transparent focus-within:border-[#007acc] ring-1 ring-transparent focus-within:ring-[#007acc]">
@@ -344,7 +349,7 @@ const Section1 = () => {
                  })}
                </div>
              )}
-          </>
+          </motion.div>
         );
       default: return null;
     }
@@ -393,7 +398,12 @@ const Section1 = () => {
       {/* 2. SIDEBAR PANEL (Responsive) */}
       <motion.div 
         initial={false}
-        animate={{ width: isSidebarOpen ? (isMobile ? 240 : 260) : 0, opacity: isSidebarOpen ? 1 : 0 }}
+        // APPLE STYLE: Smooth physics based expansion
+        animate={{ 
+          width: isSidebarOpen ? (isMobile ? 240 : 260) : 0, 
+          opacity: isSidebarOpen ? 1 : 0 
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={`flex flex-col bg-neutral-950/90 border-r border-white/10 overflow-hidden whitespace-nowrap z-40 h-full
           ${isMobile ? 'absolute top-0 left-0 shadow-2xl' : 'relative'}
         `}
@@ -404,7 +414,13 @@ const Section1 = () => {
 
       {/* Overlay for mobile */}
       {isMobile && isSidebarOpen && (
-        <div className="absolute inset-0 bg-black/50 z-30 cursor-pointer" onClick={() => setIsSidebarOpen(false)} />
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-black/50 z-30 cursor-pointer" 
+          onClick={() => setIsSidebarOpen(false)} 
+        />
       )}
 
       {/* 3. MAIN EDITOR AREA */}
@@ -419,30 +435,38 @@ const Section1 = () => {
 
            {/* Scrollable Tabs */}
            <div className="flex flex-1 overflow-x-auto no-scrollbar h-full">
-             {openTabs.map((tabName) => (
-               <div 
-                 key={tabName}
-                 onClick={() => setActiveTab(tabName)}
-                 className={`group flex items-center gap-2 px-3 h-full text-[13px] cursor-pointer border-r border-white/10 min-w-fit transition-colors relative
-                   ${activeTab === tabName ? 'bg-white/10 text-white' : 'bg-transparent text-[#999] hover:bg-white/5'}`}
-               >
-                  {tabName === 'developer.ts' && <FileJson size={14} className="text-[#3178c6]" />}
-                  {tabName === 'styles.css' && <Hash size={14} className="text-[#569cd6]" />}
-                  {tabName === 'README.md' && <LayoutTemplate size={14} className="text-[#cccccc]" />}
-                  <span>{tabName}</span>
-                  <X size={14} className={`ml-2 rounded-sm p-[1px] hover:bg-white/10 cursor-pointer ${activeTab === tabName || unsavedChanges ? 'block' : 'hidden group-hover:block'}`} onClick={(e) => handleCloseTab(e, tabName)} />
-               </div>
-             ))}
+             <AnimatePresence initial={false}>
+               {openTabs.map((tabName) => (
+                 <motion.div 
+                   key={tabName}
+                   onClick={() => setActiveTab(tabName)}
+                   // APPLE STYLE: Tabs slide in/out smoothly
+                   initial={{ opacity: 0, width: 0 }}
+                   animate={{ opacity: 1, width: "auto" }}
+                   exit={{ opacity: 0, width: 0 }}
+                   transition={{ ease: "easeInOut", duration: 0.2 }}
+                   className={`group flex items-center gap-2 px-3 h-full text-[13px] cursor-pointer border-r border-white/10 min-w-fit transition-colors relative overflow-hidden
+                     ${activeTab === tabName ? 'bg-white/10 text-white' : 'bg-transparent text-[#999] hover:bg-white/5'}`}
+                 >
+                    {tabName === 'developer.ts' && <FileJson size={14} className="text-[#3178c6]" />}
+                    {tabName === 'styles.css' && <Hash size={14} className="text-[#569cd6]" />}
+                    {tabName === 'README.md' && <LayoutTemplate size={14} className="text-[#cccccc]" />}
+                    <motion.span layout>{tabName}</motion.span>
+                    <X size={14} className={`ml-2 rounded-sm p-[1px] hover:bg-white/10 cursor-pointer ${activeTab === tabName || unsavedChanges ? 'block' : 'hidden group-hover:block'}`} onClick={(e) => handleCloseTab(e, tabName)} />
+                 </motion.div>
+               ))}
+             </AnimatePresence>
            </div>
            
            {/* Editor Toolbar */}
            <div className="flex-shrink-0 flex items-center gap-3 px-3 h-full bg-transparent border-l border-white/10">
-             <div 
-               className={`flex items-center justify-center w-6 h-6 rounded cursor-pointer transition-all duration-300 ${showToast ? 'bg-[#007acc] shadow-[0_0_10px_rgba(0,122,204,0.8)] animate-pulse' : 'hover:bg-white/10'}`} 
+             <motion.div 
+               whileTap={{ scale: 0.9 }}
+               className={`flex items-center justify-center w-6 h-6 rounded cursor-pointer transition-all duration-300 ${showToast ? 'bg-[#007acc] shadow-[0_0_10px_rgba(0,122,204,0.8)]' : 'hover:bg-white/10'}`} 
                onClick={handleRunCode}
              >
                 {isRunning ? <Loader2 size={14} className="animate-spin text-white" /> : <Play size={14} className={`${showToast ? 'text-white fill-white' : 'text-[#cccccc] fill-[#cccccc]'}`} />}
-             </div>
+             </motion.div>
              <div className="hidden sm:flex gap-3">
                <Split size={14} className="text-[#cccccc] hover:bg-white/10 cursor-pointer" />
                <MoreVertical size={14} className="text-[#cccccc] hover:bg-white/10 cursor-pointer" />
@@ -460,7 +484,10 @@ const Section1 = () => {
           <div className="flex-1 pt-2 pl-0 overflow-auto custom-scrollbar" onClick={() => { if(!isRunning) setUnsavedChanges(true); }}>
             <motion.div
               key={activeTab} 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.1 }}
+              // APPLE STYLE: Cross-dissolve feel
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ duration: 0.3, ease: "easeInOut" }}
               className="min-h-full pb-20 md:pb-0"
             >
               <CodeRenderer 
@@ -482,11 +509,12 @@ const Section1 = () => {
         <AnimatePresence>
           {showToast && (
             <motion.div 
-              initial={{ x: 300, opacity: 0 }} 
-              animate={{ x: 0, opacity: 1 }} 
-              exit={{ x: 300, opacity: 0 }}
+              // APPLE STYLE: Notification "Pop" + Slide in from right with heavy damping
+              initial={{ x: 50, opacity: 0, scale: 0.9 }} 
+              animate={{ x: 0, opacity: 1, scale: 1 }} 
+              exit={{ x: 50, opacity: 0, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="absolute bottom-12 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-50 bg-[#252526] border border-white/10 shadow-2xl rounded-sm w-[90%] max-w-[320px] overflow-hidden"
+              className="absolute bottom-12 right-1/2 translate-x-1/2 md:translate-x-0 md:right-6 z-50 bg-[#252526] border border-white/10 shadow-2xl rounded-lg w-[90%] max-w-[320px] overflow-hidden"
             >
               <div className="flex items-center justify-between px-3 py-2 bg-neutral-900 border-b border-white/10">
                  <span className="text-[11px] font-bold text-white flex items-center gap-2">
@@ -499,13 +527,13 @@ const Section1 = () => {
                  <div className="flex gap-2">
                    <button 
                      onClick={handleRunCode}
-                     className="bg-[#007acc] hover:bg-[#006bb3] text-white px-3 py-1.5 rounded-sm text-[11px] font-semibold transition-all shadow-[0_0_10px_rgba(0,122,204,0.3)] animate-pulse cursor-pointer"
+                     className="bg-[#007acc] hover:bg-[#006bb3] text-white px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all shadow-[0_0_10px_rgba(0,122,204,0.3)] cursor-pointer"
                    >
                      Run Build Task
                    </button>
                    <button 
                      onClick={() => setShowToast(false)}
-                     className="bg-[#3c3c3c] hover:bg-[#4c4c4c] text-white px-3 py-1.5 rounded-sm text-[11px] font-medium transition-colors cursor-pointer"
+                     className="bg-[#3c3c3c] hover:bg-[#4c4c4c] text-white px-3 py-1.5 rounded-md text-[11px] font-medium transition-colors cursor-pointer"
                    >
                      Dismiss
                    </button>
@@ -526,12 +554,16 @@ const Section1 = () => {
         <AnimatePresence>
           {buildStep === 2 && (
              <motion.div 
-               initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+               // APPLE STYLE: Spring up from bottom
+               initial={{ y: 100, opacity: 0, scale: 0.9 }} 
+               animate={{ y: 0, opacity: 1, scale: 1 }}
+               exit={{ y: 20, opacity: 0 }}
+               transition={{ type: "spring", stiffness: 300, damping: 20 }}
                className="absolute bottom-12 right-6 md:right-6 z-50 w-[90%] md:w-auto left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0"
              >
                 <button
                   onClick={handleScrollDown}
-                  className="bg-[#007acc] text-white px-4 py-3 md:py-2 rounded-sm shadow-xl flex items-center justify-center gap-2 text-xs font-medium hover:bg-[#006bb3] w-full md:w-auto cursor-pointer"
+                  className="bg-[#007acc] text-white px-4 py-3 md:py-2 rounded-lg shadow-xl flex items-center justify-center gap-2 text-xs font-medium hover:bg-[#006bb3] w-full md:w-auto cursor-pointer"
                 >
                   <CheckCircle2 size={14} /> Deployment Complete. Open Preview.
                 </button>
@@ -543,7 +575,11 @@ const Section1 = () => {
         <AnimatePresence>
           {isTerminalOpen && (
             <motion.div
-              initial={{ y: 250 }} animate={{ y: 0 }} exit={{ y: 250 }} transition={{ type: "spring", damping: 20 }}
+              // APPLE STYLE: Bottom sheet slide up with physics
+              initial={{ y: "100%" }} 
+              animate={{ y: 0 }} 
+              exit={{ y: "100%" }} 
+              transition={{ type: "spring", stiffness: 300, damping: 30, mass: 1 }}
               className="absolute bottom-0 left-0 right-0 h-[40vh] md:h-[200px] bg-neutral-900 border-t border-white/10 z-30 shadow-2xl"
             >
               <div className="flex items-center px-4 gap-6 text-[11px] font-bold text-[#666] border-b border-white/10 h-8 select-none">
@@ -558,18 +594,28 @@ const Section1 = () => {
               <div ref={scrollRef} className="p-4 font-mono text-[12px] overflow-y-auto h-[calc(100%-32px)] custom-scrollbar">
                  <div className="text-[#cccccc] mb-2">Microsoft Windows [Version 10.0.19045]</div>
                  {terminalLogs.map((log, i) => (
-                    <div key={i} className="mt-0.5 break-words">
+                    <motion.div 
+                      key={i} 
+                      // Staggered line entry
+                      initial={{ opacity: 0, x: -5 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      transition={{ duration: 0.2 }}
+                      className="mt-0.5 break-words"
+                    >
                        {log.startsWith('>') ? <span className="text-[#dcdcaa]">{log}</span> : 
                         log.startsWith('wait') ? <span className="text-white">{log}</span> :
                         log.startsWith('event') ? <span className="text-[#4ec9b0]">{log}</span> :
                         log.startsWith('warn') ? <span className="text-[#cca700]">{log}</span> :
                         <span className="text-[#cccccc]">{log}</span>}
-                    </div>
+                    </motion.div>
                  ))}
                  {buildStep === 2 && (
-                   <div className="mt-4 text-[#4ec9b0]">
+                   <motion.div 
+                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                     className="mt-4 text-[#4ec9b0]"
+                   >
                       Done in 4.82s. <span className="text-white animate-pulse">_</span>
-                   </div>
+                   </motion.div>
                  )}
               </div>
             </motion.div>
