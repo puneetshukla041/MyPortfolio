@@ -271,14 +271,7 @@ export default function Section6() {
           </AnimatePresence>
         </motion.div>
 
-        {/* --- FOOTER STATUS BAR --- */}
-        <div className="mt-12 flex justify-between items-center py-4 border-t border-white/5 text-[10px] text-zinc-600 font-mono uppercase tracking-widest">
-            <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
-                System Status: Optimal
-            </span>
-            <span>{filteredSkills.length} Modules Loaded</span>
-        </div>
+        {/* --- FOOTER STATUS BAR REMOVED --- */}
 
       </div>
     </section>
