@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionTemplate, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
 
@@ -163,9 +163,9 @@ const Section2 = () => {
              {/* Static background track */}
              <div className="absolute inset-0 w-[1px] bg-gradient-to-b from-transparent via-neutral-800 to-neutral-800 h-full opacity-50" />
              
-             {/* The Falling Meteor Line */}
+             {/* The Falling Meteor Line - STOP AT 88% */}
              <motion.div 
-               style={{ height: useTransform(height, [0, 1], ["0%", "100%"]) }}
+               style={{ height: useTransform(height, [0, 1], ["0%", "88%"]) }}
                className="absolute top-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-white/50 to-white z-20"
              >
                 {/* The Meteor Head (Glow + Particles) */}
@@ -185,8 +185,8 @@ const Section2 = () => {
              </motion.div>
           </motion.div>
 
-          {/* EVENTS LIST */}
-          <div className="flex flex-col gap-16 md:gap-0 md:pb-[50vh] pt-10 md:pt-0"> 
+          {/* EVENTS LIST - REDUCED PADDING */}
+          <div className="flex flex-col gap-16 md:gap-0 md:pb-24 pt-10 md:pt-0"> 
             {timelineData.map((item, index) => (
               <TimelineItem key={item.id} data={item} index={index} />
             ))}
