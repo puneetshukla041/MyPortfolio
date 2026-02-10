@@ -7,7 +7,7 @@ import {
   Search, GitGraph, Files, Settings, MoreHorizontal, 
   X, Minus, ChevronRight, ChevronDown, 
   Hash, LayoutTemplate, Bug, Menu, AlertCircle, 
-  Bell, Split, MoreVertical, Terminal
+  Bell, Split, MoreVertical, Terminal, Download
 } from 'lucide-react';
 
 // --- Types & Constants ---
@@ -208,12 +208,25 @@ const Section1 = () => {
         if (step.success) { setBuildStep(2); setIsRunning(false); }
       }, step.delay);
     });
-  }, [isRunning]); // Dependencies
+  }, [isRunning]);
 
-  const handleScrollDown = () => {
+  const handleDeploymentAction = () => {
+    // 1. Trigger Download
+    const link = document.createElement('a');
+    link.href = '/Puneet Shukla Resume.pdf'; // Assumes file is in public folder
+    link.download = 'Puneet_Shukla_Resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 2. Apple Environment Smooth Scroll
+    // Using scrollIntoView with smooth behavior is the standard way to emulate this in CSS/JS
     const nextSection = document.getElementById('section2');
-    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
-    else window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    if (nextSection) {
+        nextSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    }
   };
 
   // --- Effects ---
@@ -253,9 +266,8 @@ const Section1 = () => {
       let i = 0;
       const code = FILES_CONTENT['developer.ts'];
       
-      // Extremely fast interval (2ms)
+      // Extremely fast interval
       const interval = setInterval(() => {
-        // Type 3 characters at once for speed
         setTypedCode(code.substring(0, i + 3));
         i += 3;
         
@@ -264,7 +276,6 @@ const Section1 = () => {
           setIsTypingComplete(true);
           // Auto-run logic: Trigger handleRunCode automatically after 500ms
           setTimeout(() => {
-            // We bypass the toast and directly run the code
             handleRunCode();
           }, 500);
         }
@@ -274,7 +285,7 @@ const Section1 = () => {
         setIsTypingComplete(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]); // Removed handleRunCode to prevent loop, relying on closure or safe ref
+  }, [activeTab]);
 
   // --- RENDER SIDEBAR CONTENT ---
   const renderSidebarContent = () => {
@@ -566,10 +577,10 @@ const Section1 = () => {
                className="absolute bottom-12 right-6 md:right-6 z-50 w-[90%] md:w-auto left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0"
              >
                 <button
-                  onClick={handleScrollDown}
+                  onClick={handleDeploymentAction}
                   className="bg-[#007acc] text-white px-4 py-3 md:py-2 rounded-lg shadow-xl flex items-center justify-center gap-2 text-xs font-medium hover:bg-[#006bb3] w-full md:w-auto cursor-pointer"
                 >
-                  <CheckCircle2 size={14} /> Deployment Complete. Open Preview.
+                  <Download size={14} /> Deployment Complete. Download Resume.
                 </button>
              </motion.div>
           )}
