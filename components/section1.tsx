@@ -356,7 +356,7 @@ const Section1 = () => {
   };
 
   return (
-    <section className="relative w-full h-screen bg-transparent text-[#cccccc] flex overflow-hidden font-sans selection:bg-[#264f78] selection:text-white z-10">
+    <section className="relative w-full h-screen bg-transparent text-[#cccccc] flex overflow-hidden font-sans selection:bg-[#264f78] selection:text-white z-10 [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]">
       
       {/* 1. ACTIVITY BAR (Hidden on Mobile) */}
       <div className="hidden md:flex flex-col w-12 bg-transparent border-r border-white/10 items-center py-3 gap-2 z-30 select-none">
@@ -622,20 +622,7 @@ const Section1 = () => {
           )}
         </AnimatePresence>
 
-        {/* STATUS BAR */}
-        <div className="h-6 bg-[#007acc] text-white flex items-center px-3 text-[11px] justify-between z-40 select-none w-full absolute bottom-0 cursor-default">
-           <div className="flex items-center gap-3">
-             <span className="flex items-center gap-1 hover:bg-white/20 px-1 rounded cursor-pointer"><GitGraph size={12}/> main*</span>
-             <span className="flex items-center gap-1 hover:bg-white/20 px-1 rounded cursor-pointer"><AlertCircle size={12}/> 0</span>
-           </div>
-           <div className="flex items-center gap-3">
-             <span className="hidden sm:block">Ln {FILES_CONTENT[activeTab].split('\n').length}, Col 1</span>
-             <span className="hidden sm:block">UTF-8</span>
-             <span>{activeTab.endsWith('ts') ? 'TS' : activeTab.endsWith('css') ? 'CSS' : 'MD'}</span>
-             <span className="hover:bg-white/20 px-1 rounded cursor-pointer"><Bell size={12}/></span>
-             <span className="hidden sm:block hover:bg-white/20 px-1 rounded cursor-pointer"><CheckCircle2 size={12}/> Prettier</span>
-           </div>
-        </div>
+        {/* STATUS BAR REMOVED HERE */}
 
       </div>
     </section>
