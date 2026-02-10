@@ -185,8 +185,8 @@ const Section2 = () => {
              </motion.div>
           </motion.div>
 
-          {/* EVENTS LIST - REDUCED PADDING */}
-          <div className="flex flex-col gap-16 md:gap-0 md:pb-24 pt-10 md:pt-0"> 
+          {/* EVENTS LIST - REMOVED BOTTOM PADDING */}
+          <div className="flex flex-col gap-16 md:gap-0 md:pb-0 pt-10 md:pt-0"> 
             {timelineData.map((item, index) => (
               <TimelineItem key={item.id} data={item} index={index} />
             ))}
@@ -245,7 +245,7 @@ const TimelineItem = ({ data, index }: { data: TimelineData, index: number }) =>
             opacity, 
             scale, 
             x, 
-            rotateX,
+            rotateX, 
             filter: useMotionTemplate`blur(${blur}px)`
         }} 
         className="w-full origin-bottom"
