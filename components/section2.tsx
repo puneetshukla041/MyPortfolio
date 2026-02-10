@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionTemplate, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
 
@@ -84,6 +84,37 @@ function useMousePosition() {
   return { mouseX, mouseY, handleMouseMove };
 }
 
+// --- PARTICLE COMPONENT ---
+const MeteorParticles = () => {
+  // Generate random positions for sparkles to orbit the meteor head
+  const particles = Array.from({ length: 8 });
+  
+  return (
+    <div className="absolute -bottom-4 -left-4 w-8 h-8 pointer-events-none">
+      {particles.map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0, 1.5, 0],
+            x: [0, (Math.random() - 0.5) * 40], // Random horizontal scatter
+            y: [0, (Math.random() - 0.5) * 40], // Random vertical scatter
+            rotate: Math.random() * 360,
+          }}
+          transition={{
+            duration: 1 + Math.random(),
+            repeat: Infinity,
+            ease: "easeOut",
+            delay: Math.random() * 0.5,
+          }}
+          className="absolute left-1/2 top-1/2 w-[2px] h-[2px] bg-white rounded-full shadow-[0_0_8px_2px_rgba(255,255,255,0.8)]"
+        />
+      ))}
+    </div>
+  );
+};
+
 // --- MAIN COMPONENT ---
 const Section2 = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -121,16 +152,38 @@ const Section2 = () => {
         {/* --- RIGHT COLUMN: SCROLLABLE TIMELINE --- */}
         <div className="md:col-span-7 relative">
           
-          {/* THE BEAM (Desktop Only) */}
-          <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px mask-image-gradient">
-             <div className="absolute inset-0 w-[1px] bg-gradient-to-b from-transparent via-neutral-800 to-neutral-800 h-full" />
+          {/* THE METEOR BEAM (Desktop Only) */}
+          <motion.div 
+             initial={{ opacity: 0 }}
+             whileInView={{ opacity: 1 }}
+             viewport={{ once: true }}
+             transition={{ duration: 1 }}
+             className="hidden md:block absolute left-0 top-0 bottom-0 w-px"
+          >
+             {/* Static background track */}
+             <div className="absolute inset-0 w-[1px] bg-gradient-to-b from-transparent via-neutral-800 to-neutral-800 h-full opacity-50" />
+             
+             {/* The Falling Meteor Line */}
              <motion.div 
                style={{ height: useTransform(height, [0, 1], ["0%", "100%"]) }}
-               className="absolute top-0 left-0 w-[1px] bg-white shadow-[0_0_15px_1px_rgba(255,255,255,0.6)] z-20"
+               className="absolute top-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-white/50 to-white z-20"
              >
-                <div className="absolute bottom-0 -left-[2px] w-[5px] h-[30px] bg-gradient-to-t from-white to-transparent" />
+                {/* The Meteor Head (Glow + Particles) */}
+                <div className="absolute bottom-0 -left-[3px] w-2 h-2">
+                   {/* Core glow */}
+                   <div className="absolute inset-0 bg-white rounded-full blur-[2px] shadow-[0_0_10px_4px_rgba(255,255,255,0.6)]" />
+                   
+                   {/* Outer Aura */}
+                   <div className="absolute -inset-2 bg-white/30 rounded-full blur-xl" />
+                   
+                   {/* Sparkles */}
+                   <MeteorParticles />
+                </div>
+
+                {/* The Tail (Fade effect at bottom) */}
+                <div className="absolute bottom-0 -left-[1px] w-[3px] h-[50px] bg-gradient-to-t from-white to-transparent opacity-80" />
              </motion.div>
-          </div>
+          </motion.div>
 
           {/* EVENTS LIST */}
           <div className="flex flex-col gap-16 md:gap-0 md:pb-[50vh] pt-10 md:pt-0"> 
@@ -154,8 +207,7 @@ const TimelineItem = ({ data, index }: { data: TimelineData, index: number }) =>
     offset: ["start end", "center center"]
   });
 
-  // --- SMOOTH SCROLL PHYSICS (Apple Style) ---
-  // Lower stiffness + moderate damping = Heavy, smooth feel
+  // --- SMOOTH SCROLL PHYSICS ---
   const smoothProgress = useSpring(scrollYProgress, { 
     stiffness: 50, 
     damping: 20, 
@@ -163,10 +215,10 @@ const TimelineItem = ({ data, index }: { data: TimelineData, index: number }) =>
   });
 
   const opacity = useTransform(smoothProgress, [0, 0.5], [0, 1]);
-  const scale = useTransform(smoothProgress, [0, 0.5], [0.9, 1]); // Subtle scale
+  const scale = useTransform(smoothProgress, [0, 0.5], [0.9, 1]); 
   const blur = useTransform(smoothProgress, [0, 0.4], [10, 0]); 
-  const x = useTransform(smoothProgress, [0, 0.5], [50, 0]); // Reduced movement (50px instead of 100px)
-  const rotateX = useTransform(smoothProgress, [0, 0.5], [5, 0]); // Very subtle rotation (5deg)
+  const x = useTransform(smoothProgress, [0, 0.5], [50, 0]); 
+  const rotateX = useTransform(smoothProgress, [0, 0.5], [5, 0]); 
 
   const connectorWidth = useTransform(scrollYProgress, [0.1, 0.5], ["0%", "100%"]);
   const connectorOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
@@ -265,7 +317,7 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
 
         {/* CONTENT COLUMN */}
         <div className="flex-1">
-          {/* Header - UPDATED: Smaller fonts */}
+          {/* Header */}
           <div className="mb-4">
             <h3 className="text-xl md:text-2xl font-semibold text-white mb-1 group-hover/card:text-blue-100 transition-colors tracking-tight">
               {data.role}
@@ -279,12 +331,12 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
             </div>
           </div>
 
-          {/* Description - UPDATED: text-sm, relaxed leading */}
+          {/* Description */}
           <p className="text-neutral-200 text-sm leading-relaxed font-light mb-5 border-l border-white/20 pl-4 group-hover/card:border-white/40 transition-colors">
             {data.description}
           </p>
 
-          {/* Bullet Points - UPDATED: text-sm */}
+          {/* Bullet Points */}
           <ul className="space-y-1.5 mb-6">
             {data.points.map((point, i) => (
                <li key={i} className="flex items-start gap-2 text-sm text-neutral-400 group-hover/card:text-neutral-300 transition-colors">
@@ -294,7 +346,7 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
             ))}
           </ul>
 
-          {/* Tech Stack - Glass Chips - UPDATED: Smaller text-[10px] */}
+          {/* Tech Stack */}
           <div className="flex flex-wrap gap-1.5">
             {data.tech.map((t, i) => (
               <span 
@@ -307,7 +359,7 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
           </div>
         </div>
         
-        {/* Right Side Decoration - UPDATED: Smaller */}
+        {/* Right Side Decoration */}
         <div className="hidden xl:block absolute top-6 right-6">
              <div className="flex flex-col items-end gap-0.5 opacity-20 group-hover/card:opacity-50 transition-opacity">
                 <div className="w-8 h-[1px] bg-white" />
