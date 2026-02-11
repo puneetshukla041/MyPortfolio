@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import SmoothScroll from '@/components/SmoothScroll'; // <--- Import the component
 
 export const metadata: Metadata = {
   title: 'Puneet Shukla',
@@ -12,7 +13,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      {/* NOTE: Lenis works best when applied to the whole body.
+        The SmoothScroll component handles the logic.
+      */}
+      <body>
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }
