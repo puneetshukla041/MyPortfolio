@@ -1,10 +1,18 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionTemplate, useMotionValue } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 import Image from 'next/image';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
-// --- Types ---
+// Register GSAP Plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+// --- DATA (Unchanged) ---
 interface TimelineData {
   id: string;
   role: string;
@@ -18,7 +26,6 @@ interface TimelineData {
   tech: string[];
 }
 
-// --- DATA ---
 const timelineData: TimelineData[] = [
   {
     id: 'ssi',
@@ -70,7 +77,7 @@ const timelineData: TimelineData[] = [
   }
 ];
 
-// --- UTILS ---
+// --- UTILS (Unchanged) ---
 function useMousePosition() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -84,11 +91,9 @@ function useMousePosition() {
   return { mouseX, mouseY, handleMouseMove };
 }
 
-// --- PARTICLE COMPONENT ---
+// --- PARTICLE COMPONENT (Unchanged) ---
 const MeteorParticles = () => {
-  // Generate random positions for sparkles to orbit the meteor head
   const particles = Array.from({ length: 8 });
-  
   return (
     <div className="absolute -bottom-4 -left-4 w-8 h-8 pointer-events-none">
       {particles.map((_, i) => (
@@ -98,8 +103,8 @@ const MeteorParticles = () => {
           animate={{
             opacity: [0, 1, 0],
             scale: [0, 1.5, 0],
-            x: [0, (Math.random() - 0.5) * 40], // Random horizontal scatter
-            y: [0, (Math.random() - 0.5) * 40], // Random vertical scatter
+            x: [0, (Math.random() - 0.5) * 40],
+            y: [0, (Math.random() - 0.5) * 40],
             rotate: Math.random() * 360,
           }}
           transition={{
@@ -117,76 +122,143 @@ const MeteorParticles = () => {
 
 // --- MAIN COMPONENT ---
 const Section2 = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  const container = useRef<HTMLDivElement>(null);
+  const leftCol = useRef<HTMLDivElement>(null);
+  const meteorRef = useRef<HTMLDivElement>(null);
+  
+  // State to track which company is currently in view
+  const [activeCompany, setActiveCompany] = useState(timelineData[0].company);
 
-  const height = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  useGSAP(() => {
+    // 1. PINNING STRATEGY
+    // We pin the Left Column so it stays fixed while the Right Column scrolls
+    ScrollTrigger.create({
+      trigger: container.current,
+      start: "top top",
+      end: "bottom bottom",
+      pin: leftCol.current,
+      pinSpacing: false, // Allows right column to scroll alongside
+    });
+
+    // 2. METEOR BEAM LOGIC
+    // Animates the height of the meteor beam from 0% to 100% as you scroll the container
+    gsap.to(meteorRef.current, {
+      height: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: container.current,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5, // Smooth scrubbing effect
+      }
+    });
+
+    // 3. CARD REVEALS & CONTEXT SWITCHING
+    const cards = gsap.utils.toArray('.timeline-card');
+    
+    cards.forEach((card: any, i) => {
+      // Animate Card Entry
+      gsap.fromTo(card, 
+        { opacity: 0, y: 100, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%", // Trigger when top of card hits 85% of viewport
+            end: "top 50%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Connector Line Animation (The white line shooting out)
+      const connector = card.querySelector('.connector-line');
+      if (connector) {
+        gsap.fromTo(connector,
+          { width: "0%", opacity: 0 },
+          {
+            width: "100%",
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 70%", // Triggers slightly after the card starts entering
+            }
+          }
+        );
+      }
+
+      // Context Switching (Change text on left based on right scroll)
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveCompany(timelineData[i].company),
+        onEnterBack: () => setActiveCompany(timelineData[i].company),
+      });
+    });
+
+  }, { scope: container });
 
   return (
-    <section 
-      ref={containerRef}
-      className="relative w-full bg-transparent font-sans z-10"
-    >
+    <section ref={container} className="relative w-full bg-transparent font-sans z-10 min-h-screen pb-24">
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8">
         
-        {/* --- LEFT COLUMN: STICKY TITLE --- */}
-        <div className="md:col-span-5 flex flex-col justify-start md:justify-center md:h-screen md:sticky md:top-0 py-10 md:py-0">
-          <motion.div 
-            initial={{ opacity: 0, x: -50, filter: "blur(10px)" }}
-            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="pl-2 md:pl-4 border-l-2 border-white/10"
-          >
+        {/* --- LEFT COLUMN: PINNED WITH GSAP --- */}
+        <div ref={leftCol} className="md:col-span-5 flex flex-col justify-center h-screen py-10 md:py-0">
+          <div className="pl-2 md:pl-4 border-l-2 border-white/10 relative overflow-hidden">
+            
+            {/* Animated Title */}
             <h2 className="text-5xl md:text-8xl font-bold tracking-tighter text-white mb-6">
               The <span className="text-neutral-500">Journey.</span>
             </h2>
-            <p className="text-neutral-300 text-lg md:text-xl font-light tracking-wide max-w-sm">
-              Current Engineering challenges and past breakthroughs.
+            
+            <p className="text-neutral-300 text-lg md:text-xl font-light tracking-wide max-w-sm mb-8">
+              Engineering milestones and technical breakthroughs.
             </p>
-          </motion.div>
+
+            {/* GSAP POWERED CONTEXT: Changes based on scroll position */}
+            <div className="hidden md:block">
+                <p className="text-xs font-mono text-emerald-500 mb-2 uppercase tracking-widest">
+                    Currently Viewing
+                </p>
+                {/* We use a key to trigger a simple React re-render animation when company changes */}
+                <div key={activeCompany} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <h3 className="text-3xl font-bold text-white/80">
+                        {activeCompany}
+                    </h3>
+                </div>
+            </div>
+
+          </div>
         </div>
 
         {/* --- RIGHT COLUMN: SCROLLABLE TIMELINE --- */}
-        <div className="md:col-span-7 relative">
+        <div className="md:col-span-7 relative pt-[50vh] pb-[20vh]"> {/* Padding pushes first card to middle */}
           
-          {/* THE METEOR BEAM (Desktop Only) */}
-          <motion.div 
-             initial={{ opacity: 0 }}
-             whileInView={{ opacity: 1 }}
-             viewport={{ once: true }}
-             transition={{ duration: 1 }}
-             className="hidden md:block absolute left-0 top-0 bottom-0 w-px"
-          >
-             {/* Static background track */}
+          {/* THE METEOR BEAM */}
+          <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px">
+             {/* Track */}
              <div className="absolute inset-0 w-[1px] bg-gradient-to-b from-transparent via-neutral-800 to-neutral-800 h-full opacity-50" />
              
-             {/* The Falling Meteor Line - STOP AT 88% */}
-             <motion.div 
-               style={{ height: useTransform(height, [0, 1], ["0%", "88%"]) }}
-               className="absolute top-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-white/50 to-white z-20"
-             >
-                {/* The Meteor Head (Glow + Particles) */}
+             {/* GSAP Animated Line */}
+             <div ref={meteorRef} className="absolute top-0 left-0 w-[1px] bg-gradient-to-b from-transparent via-white/50 to-white z-20 h-0 overflow-visible">
+                {/* Meteor Head */}
                 <div className="absolute bottom-0 -left-[3px] w-2 h-2">
-                   {/* Core glow */}
                    <div className="absolute inset-0 bg-white rounded-full blur-[2px] shadow-[0_0_10px_4px_rgba(255,255,255,0.6)]" />
-                   
-                   {/* Outer Aura */}
                    <div className="absolute -inset-2 bg-white/30 rounded-full blur-xl" />
-                   
-                   {/* Sparkles */}
                    <MeteorParticles />
                 </div>
+             </div>
+          </div>
 
-                {/* The Tail (Fade effect at bottom) */}
-                <div className="absolute bottom-0 -left-[1px] w-[3px] h-[50px] bg-gradient-to-t from-white to-transparent opacity-80" />
-             </motion.div>
-          </motion.div>
-
-          {/* EVENTS LIST - REMOVED BOTTOM PADDING */}
-          <div className="flex flex-col gap-16 md:gap-0 md:pb-0 pt-10 md:pt-0"> 
+          {/* EVENTS LIST */}
+          <div className="flex flex-col gap-32"> 
             {timelineData.map((item, index) => (
               <TimelineItem key={item.id} data={item} index={index} />
             ))}
@@ -198,65 +270,25 @@ const Section2 = () => {
   );
 };
 
-// --- TIMELINE ITEM ---
+// --- TIMELINE ITEM (Hybrid: GSAP Layout + Framer Hover) ---
 const TimelineItem = ({ data, index }: { data: TimelineData, index: number }) => {
-  const itemRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: itemRef,
-    offset: ["start end", "center center"]
-  });
-
-  // --- SMOOTH SCROLL PHYSICS ---
-  const smoothProgress = useSpring(scrollYProgress, { 
-    stiffness: 50, 
-    damping: 20, 
-    restDelta: 0.001 
-  });
-
-  const opacity = useTransform(smoothProgress, [0, 0.5], [0, 1]);
-  const scale = useTransform(smoothProgress, [0, 0.5], [0.9, 1]); 
-  const blur = useTransform(smoothProgress, [0, 0.4], [10, 0]); 
-  const x = useTransform(smoothProgress, [0, 0.5], [50, 0]); 
-  const rotateX = useTransform(smoothProgress, [0, 0.5], [5, 0]); 
-
-  const connectorWidth = useTransform(scrollYProgress, [0.1, 0.5], ["0%", "100%"]);
-  const connectorOpacity = useTransform(scrollYProgress, [0.1, 0.4], [0, 1]);
-
   return (
-    <div 
-      ref={itemRef} 
-      className="relative min-h-fit md:min-h-screen flex items-center justify-center md:pl-16 md:snap-center md:snap-always perspective-1000"
-    >
-       {/* Connector (Desktop Only) */}
+    <div className="timeline-card relative min-h-fit flex items-center justify-center md:pl-16 perspective-1000">
+       
+       {/* Connector (Animated by GSAP) */}
        <div className="hidden md:block absolute top-1/2 left-0 w-16 h-px z-0 pointer-events-none -translate-y-1/2">
-          <motion.div 
-            style={{ width: connectorWidth, opacity: connectorOpacity }}
-            className="h-full bg-gradient-to-r from-neutral-800 via-white/50 to-neutral-800"
-          />
-          <motion.div 
-            style={{ opacity: connectorOpacity }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_2px_rgba(255,255,255,0.5)]"
-          />
+          <div className="connector-line h-full bg-gradient-to-r from-neutral-800 via-white/50 to-neutral-800 w-0 opacity-0" />
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_10px_2px_rgba(255,255,255,0.5)]" />
        </div>
 
-      <motion.div 
-        style={{ 
-            opacity, 
-            scale, 
-            x, 
-            rotateX, 
-            filter: useMotionTemplate`blur(${blur}px)`
-        }} 
-        className="w-full origin-bottom"
-      >
+      <div className="w-full origin-bottom">
         <SpotlightCard data={data} index={index} />
-      </motion.div>
+      </div>
     </div>
   );
 };
 
-// --- SPOTLIGHT CARD ---
+// --- SPOTLIGHT CARD (Kept Framer Motion for Mouse Physics) ---
 const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) => {
   const { mouseX, mouseY, handleMouseMove } = useMousePosition();
   
@@ -265,7 +297,7 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
       onMouseMove={handleMouseMove}
       className="relative w-full rounded-3xl overflow-hidden bg-zinc-900/90 border border-white/10 backdrop-blur-md group/card transition-all duration-500 hover:border-white/20 shadow-2xl shadow-black/50"
     >
-      {/* 1. SPOTLIGHT EFFECT HOVER */}
+      {/* 1. SPOTLIGHT EFFECT */}
       <motion.div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover/card:opacity-100 z-10"
         style={{
@@ -279,7 +311,7 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
         }}
       />
       
-      {/* 2. GLOWING BORDER EFFECT */}
+      {/* 2. GLOWING BORDER */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover/card:opacity-100 z-20"
         style={{
@@ -317,7 +349,6 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
 
         {/* CONTENT COLUMN */}
         <div className="flex-1">
-          {/* Header */}
           <div className="mb-4">
             <h3 className="text-xl md:text-2xl font-semibold text-white mb-1 group-hover/card:text-blue-100 transition-colors tracking-tight">
               {data.role}
@@ -331,12 +362,10 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
             </div>
           </div>
 
-          {/* Description */}
           <p className="text-neutral-200 text-sm leading-relaxed font-light mb-5 border-l border-white/20 pl-4 group-hover/card:border-white/40 transition-colors">
             {data.description}
           </p>
 
-          {/* Bullet Points */}
           <ul className="space-y-1.5 mb-6">
             {data.points.map((point, i) => (
                <li key={i} className="flex items-start gap-2 text-sm text-neutral-400 group-hover/card:text-neutral-300 transition-colors">
@@ -346,7 +375,6 @@ const SpotlightCard = ({ data, index }: { data: TimelineData, index: number }) =
             ))}
           </ul>
 
-          {/* Tech Stack */}
           <div className="flex flex-wrap gap-1.5">
             {data.tech.map((t, i) => (
               <span 
