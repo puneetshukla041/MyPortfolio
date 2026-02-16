@@ -29,7 +29,7 @@ export interface Project {
 }
 
 // =====================================================
-// PROJECTS DATA
+// PROJECTS DATA (Top 3 Only)
 // =====================================================
 export const PROJECTS: Project[] = [
   {
@@ -74,7 +74,7 @@ export const PROJECTS: Project[] = [
     image: "/images/ssicrs.png", 
     imageAlt: "SSI CRS Training Portal",
     images: ["/images/ssicrs.png"],
-    url: "https://ssiscrsweb.vercel.app",
+    url: "https://ssicrsweb.vercel.app",
     github: "",
     description: [
       "Architected a dedicated digital portal for healthcare professionals to register for specialized training programs on the SSI Mantra, India's first indigenous surgical robotic system.",
@@ -82,34 +82,6 @@ export const PROJECTS: Project[] = [
       "Engineered the platform to scale training accessibility, ultimately helping medical staff deliver safer, smarter, and more accessible surgical care to patients worldwide."
     ],
     technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
-  },
-  {
-    title: "Hiregeist Job Platform",
-    image:
-      "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=1600&auto=format&fit=crop",
-    images: ["https://hiregeist.vercel.app/"],
-    url: "https://hiregeist.vercel.app/",
-    github: "https://github.com/steeltroops-ai/Hiregeist",
-    description: [
-      "Architected modern job placement platform designed to transform how students discover opportunities and companies find talent.",
-      "Implemented intelligent matching algorithms and comprehensive user management system with real-time communication features.",
-    ],
-    technologies: ["Next.js 15", "React 19", "TypeScript"],
-  },
-  {
-    title: "Black Hole Simulation",
-    image:
-      "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1600&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1600&auto=format&fit=crop",
-    ],
-    url: "https://blackhole-simulation.vercel.app/",
-    github: "https://github.com/steeltroops-ai/blackhole-simulation",
-    description: [
-      "Developed a real-time, interactive WebGL simulation of Schwarzschild/Kerr black holes using General Relativistic Ray Marching and GLSL.",
-      "Implemented physically accurate gravitational lensing, volumetric accretion disks with Doppler beaming, and optimized adaptive step sizing for high-performance rendering.",
-    ],
-    technologies: ["Next.js", "WebGL", "GLSL", "TypeScript", "React"],
   },
 ];
 
@@ -576,9 +548,15 @@ const Projects: React.FC = () => {
       className="pb-16 sm:pb-24 lg:pb-32 border-b border-neutral-800 scroll-mt-20"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <h2 className="my-12 sm:my-16 lg:my-24 section-title">
-          My <span>Projects</span>
-        </h2>
+        
+        {/* --- HEADER --- */}
+        <div className="flex flex-col xl:flex-row xl:items-end justify-between mb-12 md:mb-16 gap-8 md:gap-12 mt-12 sm:mt-16 lg:mt-24">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white">
+              Engineering <br/> <span className="text-zinc-600">Ecosystem.</span>
+            </h1>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 auto-rows-min">
           {PROJECTS.map((project, index) => {
