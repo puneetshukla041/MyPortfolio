@@ -74,7 +74,7 @@ export const PROJECTS: Project[] = [
     image: "/images/ssicrs.png", 
     imageAlt: "SSI CRS Training Portal",
     images: ["/images/ssicrs.png"],
-    url: "https://ssicrsweb.vercel.app",
+    url: "https://ssiscrsweb.vercel.app",
     github: "",
     description: [
       "Architected a dedicated digital portal for healthcare professionals to register for specialized training programs on the SSI Mantra, India's first indigenous surgical robotic system.",
@@ -553,7 +553,7 @@ const Projects: React.FC = () => {
         <div className="flex flex-col xl:flex-row xl:items-end justify-between mb-12 md:mb-16 gap-8 md:gap-12 mt-12 sm:mt-16 lg:mt-24">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white">
-              Engineering <br/> <span className="text-zinc-600">Ecosystem.</span>
+              My <br className="hidden sm:block" /> <span className="text-zinc-600">Projects.</span>
             </h1>
           </div>
         </div>
