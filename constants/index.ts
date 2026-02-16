@@ -12,6 +12,7 @@ export interface PersonalInfo {
   location: string;
   university: string;
   degree: string;
+  
   cgpa: string;
 }
 
