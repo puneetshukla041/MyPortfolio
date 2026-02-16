@@ -33,29 +33,20 @@ export interface Project {
 // =====================================================
 export const PROJECTS: Project[] = [
   {
-    title: "MediLens Clinical Intelligence Platform",
-    image:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1600&auto=format&fit=crop",
-    imageAlt:
-      "MediLens Clinical Intelligence Dashboard showing medical imaging and speech biomarker data",
-    images: [
-      "https://medilenss.vercel.app/",
-      "https://medilenss.vercel.app/dashboard",
-      "https://medilenss.vercel.app/dashboard/speech",
-    ],
-    url: "https://medilenss.vercel.app/",
-    github: "https://github.com/steeltroops-ai/medilens",
+    title: "SSI STUDIOS",
+    image: "/images/ssistudios.png",
+    imageAlt: "SSI STUDIOS Platform Dashboard",
+    images: ["/images/ssistudios.png"],
+    url: "https://ssistudios.vercel.app",
+    github: "",
     description: [
-      "Designed a distributed clinical research platform integrating medical imaging, speech biomarkers and structured patient data into unified dashboards for reproducible evaluation workflows.",
-      "Implemented model serving pipelines with experiment tracking (MLflow), RBAC security, and reproducible evaluation workflows achieving <200ms inference latency for real-time clinical application.",
+      "Architected a full-stack Next.js web application for SS Innovations to automate manual design and data entry, replacing tedious Photoshop workflows with a centralized asset generation platform.",
+      "Developed automated design generators for ID Cards, Visiting Cards, Invitations, and Posters, programmatically handling text formatting, logo alignment, scaling, and background removal.",
+      "Built a Certificate Module with 'Smart Excel Import' for automated data cleaning, deduplication, and bulk email distribution via a custom mail API.",
+      "Engineered a real-time admin dashboard with custom analytics to track monthly usage trends, system status, and asset generation metrics without page reloads.",
+      "Designed a clean, accessible UI using React and Tailwind CSS, featuring dynamic Light/Dark themes, secure role-based authentication, and a built-in bug reporting tool."
     ],
-    technologies: [
-      "Next.js",
-      "TypeScript",
-      "FastAPI",
-      "PostgreSQL",
-      "PyTorch",
-    ],
+    technologies: ["Next.js", "React", "Tailwind CSS", "Full-Stack", "Automation"],
   },
   {
     title: "RAG LLM Fact Checker",
@@ -79,19 +70,18 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    title: "AI-Powered Drug Research Platform",
-    image:
-      "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1600&auto=format&fit=crop",
-    imageAlt:
-      "AI-Powered Drug Research Platform for molecule generation and protein interaction visualization",
-    images: ["https://drug-research.vercel.app/molecule-bank"],
-    url: "https://drug-research.vercel.app/",
+    title: "SSI CRS",
+    image: "/images/ssicrs.png", 
+    imageAlt: "SSI CRS Training Portal",
+    images: ["/images/ssicrs.png"],
+    url: "https://ssiscrsweb.vercel.app",
     github: "",
     description: [
-      "Architected a collaborative research platform for molecule generation and protein interaction visualization using LLM-driven prompt pipelines.",
-      "Implemented multi-service backend architecture with real-time updates, experiment logging and secure access control for distributed research teams.",
+      "Architected a dedicated digital portal for healthcare professionals to register for specialized training programs on the SSI Mantra, India's first indigenous surgical robotic system.",
+      "Developed a seamless enrollment hub that streamlines the sign-up process for hands-on surgical courses, empowering doctors to efficiently acquire skills for highly precise, minimally invasive robotic surgeries.",
+      "Engineered the platform to scale training accessibility, ultimately helping medical staff deliver safer, smarter, and more accessible surgical care to patients worldwide."
     ],
-    technologies: ["Next.js", "TypeScript", "MongoDB", "Nvidia NeMo", "RDKit"],
+    technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
   },
   {
     title: "Hiregeist Job Platform",
