@@ -49,24 +49,24 @@ export const PROJECTS: Project[] = [
     technologies: ["Next.js", "React", "Tailwind CSS", "Full-Stack", "Automation"],
   },
   {
-    title: "RAG LLM Fact Checker",
-    image:
-      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1600&auto=format&fit=crop",
-    imageAlt:
-      "RAG LLM Fact Checker interface for research paper semantic search and hallucination detection",
-    images: ["https://llm-fact-checker.vercel.app/"],
-    url: "https://llm-fact-checker.vercel.app/",
-    github: "https://github.com/steeltroops-ai/llm-fact-checker",
+    title: "SMRSC 2026 Platform",
+    image: "/images/smrsc.png",
+    imageAlt: "SMRSC 2026 Global Conference Platform",
+    images: ["/images/smrsc.png"],
+    url: "https://www.ssinnovations.com/SMRSC_2026/home/",
+    github: "",
     description: [
-      "Built production retrieval-augmented generation system indexing research papers with semantic search, achieving <200ms query latency through optimized embedding strategies and caching.",
-      "Designed scalable chunking strategies (512-token overlapping windows), pgvector indexing, and context-aware LLM summarization with hallucination detection and source attribution.",
+      "Architected the official web platform for SMRSC (SSI Multi-Specialty Robotic Surgery Conference), a global event uniting surgeons, innovators, and healthcare leaders to explore the future of connected surgical care.",
+      "Engineered a 'Next-Level' interactive venue map with Framer Motion, featuring fully responsive glassmorphic UI elements, animated path drawing, traveling data-packet animations, and fluid mobile-to-desktop layout transitions.",
+      "Developed complex, dynamic UI sections including floating 'Clinical Outcomes' grids, utilizing advanced CSS viewport units and mathematical scaling to ensure a flawless experience across all devices.",
+      "Delivered a premium, high-performance digital hub for attendees to access live robotic procedure demonstrations, schedules, and the latest technological advancements in modern surgery."
     ],
     technologies: [
-      "Python",
-      "FastAPI",
-      "PostgreSQL",
-      "Vector Embeddings",
-      "LLM APIs",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Advanced UI/UX"
     ],
   },
   {
