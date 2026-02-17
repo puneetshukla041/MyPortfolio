@@ -213,16 +213,15 @@ export default function Section6() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         
         {/* --- HEADER --- */}
-        <div className="flex flex-col xl:flex-row xl:items-end justify-between mb-12 md:mb-16 gap-8 md:gap-12">
+        <div className="flex flex-col xl:flex-row xl:items-end justify-between mb-12 md:mb-16 gap-6 md:gap-12">
           <div className="max-w-2xl">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white">
-              Engineering <br/> <span className="text-zinc-600">Ecosystem.</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white">
+              Engineering <br className="hidden sm:block" /> <span className="text-zinc-600">Ecosystem.</span>
             </h1>
           </div>
 
           {/* --- IOS STYLE SEGMENTED CONTROL --- */}
-          {/* Scrollable on mobile, flex on desktop */}
-          <div className="w-full xl:w-auto overflow-x-auto pb-4 xl:pb-0 no-scrollbar">
+          <div className="w-full xl:w-auto overflow-x-auto pb-4 xl:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className="p-1 bg-white/5 border border-white/10 rounded-full backdrop-blur-2xl flex w-max xl:w-auto gap-1 shadow-2xl">
                 {FILTERS.map((filter) => (
                 <button
@@ -241,7 +240,8 @@ export default function Section6() {
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                     )}
-                    <span className="relative z-10 mix-blend-multiply">{filter.label}</span>
+                    {/* mix-blend-multiply removed to fix invisible text on mobile dark-mode */}
+                    <span className="relative z-10">{filter.label}</span>
                 </button>
                 ))}
             </div>
@@ -253,7 +253,7 @@ export default function Section6() {
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
         >
-          <AnimatePresence mode='popLayout'>
+          <AnimatePresence>
             {filteredSkills.map((skill) => (
               <motion.div
                 layout
@@ -262,7 +262,7 @@ export default function Section6() {
                 animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                 exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className={`${skill.category === 'FRONTEND' && activeFilter === 'ALL' ? 'md:col-span-2' : 'col-span-1'}`}
+                className={`flex w-full h-full ${skill.category === 'FRONTEND' && activeFilter === 'ALL' ? 'md:col-span-2' : 'col-span-1'}`}
               >
                 <BentoCard skill={skill} />
               </motion.div>
@@ -292,11 +292,11 @@ const BentoCard = ({ skill }: { skill: Skill }) => {
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className="group relative h-full bg-black/40 border border-white/10 rounded-3xl overflow-hidden hover:border-white/20 transition-colors duration-500 cursor-pointer flex flex-col"
+      className="group relative w-full h-full bg-black/40 border border-white/10 rounded-3xl overflow-hidden hover:border-white/20 transition-colors duration-500 cursor-pointer flex flex-col"
     >
-      {/* Spotlight Effect */}
+      {/* Spotlight Effect - Hidden on mobile to prevent sticky touch glitches */}
       <motion.div
-        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-10 hidden md:block"
         style={{
           background: useMotionTemplate`
             radial-gradient(
@@ -321,7 +321,7 @@ const BentoCard = ({ skill }: { skill: Skill }) => {
         </div>
 
         {/* Middle Section */}
-        <div>
+        <div className="flex-1">
           <h3 className="text-lg md:text-xl font-semibold text-white mb-1 group-hover:text-emerald-400 transition-colors">
             {skill.name}
           </h3>
@@ -331,7 +331,7 @@ const BentoCard = ({ skill }: { skill: Skill }) => {
           
           {/* Companies Mini-Dock */}
           {skill.companies && (
-            <div className="flex items-center gap-[-8px] mb-4">
+            <div className="flex items-center mb-4">
                <div className="flex -space-x-2">
                  {skill.companies.map((c, i) => (
                     <div 
@@ -365,6 +365,7 @@ const BentoCard = ({ skill }: { skill: Skill }) => {
                 <motion.div 
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.level}%` }}
+                  viewport={{ once: true }}
                   transition={{ duration: 1.5, ease: "circOut" }}
                   className={`h-full rounded-full ${
                     skill.level > 90 ? 'bg-gradient-to-r from-emerald-500 to-green-400' : 'bg-zinc-500'
