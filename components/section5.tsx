@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, createContext, useContext } from 'react';
 import { 
   Volume2, 
   VolumeX, 
@@ -17,9 +17,21 @@ import {
 } from 'lucide-react';
 
 // ===========================================================================
+// GLOBAL VIDEO PRELOADER CONTEXT
+// This handles downloading videos in the background sequentially.
+// ===========================================================================
+const VideoPreloadContext = createContext<{
+  videoSources: Record<string, string>;
+}>({ videoSources: {} });
+
+
+// ===========================================================================
 // SECTION 3
 // ===========================================================================
 const Section3 = () => {
+  const { videoSources } = useContext(VideoPreloadContext);
+  const videoSrc = videoSources['sec3'] || '/videos/heroone.webm';
+
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showIntro, setShowIntro] = useState(false);
@@ -157,9 +169,8 @@ const Section3 = () => {
               playsInline
               preload="auto"
               onCanPlayThrough={handleVideoLoad}
-            >
-              <source src="/videos/heroone.webm" type="video/webm" />
-            </video>
+              src={videoSrc}
+            />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
 
@@ -265,6 +276,9 @@ const Section3 = () => {
 // SECTION 4
 // ===========================================================================
 const Section4 = () => {
+  const { videoSources } = useContext(VideoPreloadContext);
+  const videoSrc = videoSources['sec4'] || '/videos/herotwo.webm';
+
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showIntro, setShowIntro] = useState(false);
@@ -402,9 +416,8 @@ const Section4 = () => {
               playsInline
               preload="auto"
               onCanPlayThrough={handleVideoLoad}
-            >
-              <source src="/videos/herotwo.webm" type="video/webm" />
-            </video>
+              src={videoSrc}
+            />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
 
@@ -512,6 +525,9 @@ const Section4 = () => {
 // SECTION BOMBAY
 // ===========================================================================
 const SectionBombay = () => {
+  const { videoSources } = useContext(VideoPreloadContext);
+  const videoSrc = videoSources['secBombay'] || '/videos/herofour.webm';
+
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showIntro, setShowIntro] = useState(false);
@@ -649,9 +665,8 @@ const SectionBombay = () => {
               playsInline
               preload="auto"
               onCanPlayThrough={handleVideoLoad}
-            >
-              <source src="/videos/herofour.webm" type="video/webm" />
-            </video>
+              src={videoSrc}
+            />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-blue-900/10 to-black/30 pointer-events-none" />
 
@@ -759,6 +774,9 @@ const SectionBombay = () => {
 // SECTION NATURE
 // ===========================================================================
 const SectionNature = () => {
+  const { videoSources } = useContext(VideoPreloadContext);
+  const videoSrc = videoSources['secNature'] || '/videos/herofive.webm';
+
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showIntro, setShowIntro] = useState(false);
@@ -891,9 +909,8 @@ const SectionNature = () => {
               playsInline
               preload="auto"
               onCanPlayThrough={handleVideoLoad}
-            >
-              <source src="/videos/herofive.webm" type="video/webm" />
-            </video>
+              src={videoSrc}
+            />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-orange-900/10 to-black/30 pointer-events-none" />
 
@@ -1004,6 +1021,9 @@ const SectionNature = () => {
 // SECTION DREAMS
 // ===========================================================================
 const SectionDreams = () => {
+  const { videoSources } = useContext(VideoPreloadContext);
+  const videoSrc = videoSources['secDreams'] || '/videos/herosix.webm';
+
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [showIntro, setShowIntro] = useState(false);
@@ -1142,9 +1162,8 @@ const SectionDreams = () => {
               playsInline
               preload="auto"
               onCanPlayThrough={handleVideoLoad}
-            >
-              <source src="/videos/herosix.webm" type="video/webm" />
-            </video>
+              src={videoSrc}
+            />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-blue-900/10 to-black/30 pointer-events-none" />
 
@@ -1250,13 +1269,58 @@ const SectionDreams = () => {
 // MAIN SHOWCASE COMPONENT (EXPORTS ALL SECTIONS)
 // ===========================================================================
 export default function CinematicShowcase() {
+  const [videoSources, setVideoSources] = useState<Record<string, string>>({});
+  const blobUrlsRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    const preloadVideos = async () => {
+      // The array of videos we want to download in the background sequentially
+      const videosToLoad = [
+        { id: 'sec3', url: '/videos/heroone.webm' },
+        { id: 'sec4', url: '/videos/herotwo.webm' },
+        { id: 'secBombay', url: '/videos/herofour.webm' },
+        { id: 'secNature', url: '/videos/herofive.webm' },
+        { id: 'secDreams', url: '/videos/herosix.webm' },
+      ];
+
+      for (const video of videosToLoad) {
+        if (!isMounted) break;
+        try {
+          // Fetch the video data over the network sequentially
+          const response = await fetch(video.url);
+          const blob = await response.blob();
+          
+          // Convert to a local memory URL for instant playback
+          const objectUrl = URL.createObjectURL(blob);
+          
+          if (isMounted) {
+            blobUrlsRef.current.push(objectUrl);
+            setVideoSources(prev => ({ ...prev, [video.id]: objectUrl }));
+          }
+        } catch (error) {
+          console.error(`Failed to background load ${video.url}`, error);
+        }
+      }
+    };
+
+    preloadVideos();
+
+    return () => {
+      isMounted = false;
+      // Prevent memory leaks by revoking the blobs when the component unmounts
+      blobUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, []);
+
   return (
-    <>
+    <VideoPreloadContext.Provider value={{ videoSources }}>
       <Section3 />
       <Section4 />
       <SectionBombay />
       <SectionNature />
       <SectionDreams />
-    </>
+    </VideoPreloadContext.Provider>
   );
 }
