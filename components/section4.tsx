@@ -129,19 +129,19 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       className={`group cursor-pointer flex flex-col relative overflow-hidden rounded-2xl transition-all duration-500 bg-transparent backdrop-blur-none border-0 z-0
         ${
           isExpanded
-            ? "h-auto shadow-[0_0_80px_-20px_rgba(255,255,255,0.1)]"
-            : "h-[400px] sm:h-[480px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+            ? "h-auto shadow-[0_0_80px_-20px_rgba(255,255,255,0.05)]"
+            : "h-[400px] sm:h-[480px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
         }`}
     >
       {/* Liquid Glass Outline */}
-      <div className="absolute inset-0 rounded-2xl border border-white/20 pointer-events-none z-30"></div>
+      <div className="absolute inset-0 rounded-2xl border border-foreground/20 pointer-events-none z-30"></div>
 
       {/* Internal Glass Highlight */}
-      <div className="absolute inset-[1px] rounded-[calc(1rem-1.5px)] border border-white/5 pointer-events-none z-30"></div>
+      <div className="absolute inset-[1px] rounded-[calc(1rem-1.5px)] border border-foreground/5 pointer-events-none z-30"></div>
 
       {/* Progressive Glass Background Layer */}
       <div
-        className="absolute inset-0 bg-white/[0.01] rounded-2xl pointer-events-none z-0"
+        className="absolute inset-0 bg-foreground/[0.02] rounded-2xl pointer-events-none z-0"
         style={{
           maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to bottom, black 60%, transparent 100%)",
@@ -161,8 +161,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       />
 
       {/* Premium Liquid Accents */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity z-40"></div>
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-transparent pointer-events-none z-30"></div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity z-40"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.05] via-transparent to-transparent pointer-events-none z-30"></div>
 
       {/* Project Image Area with Progressive Mask */}
       <motion.div
@@ -192,7 +192,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Fallback Placeholder (if no image at all) */}
         {!images.length && (
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-blue-500/10 flex items-center justify-center">
-            <FaLayerGroup className="text-white/10 text-6xl" />
+            <FaLayerGroup className="text-foreground/10 text-6xl" />
           </div>
         )}
 
@@ -202,7 +202,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4 z-40">
               <button
                 onClick={prevImage}
-                className="p-2 sm:p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
               >
                 <FaChevronLeft className="text-xs sm:text-sm" />
               </button>
@@ -210,7 +210,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 z-40">
               <button
                 onClick={nextImage}
-                className="p-2 sm:p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/20"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
               >
                 <FaChevronRight className="text-xs sm:text-sm" />
               </button>
@@ -222,8 +222,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   key={i}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     i === currentImageIndex
-                      ? "w-4 bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                      : "w-1.5 bg-white/40"
+                      ? "w-4 bg-foreground shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                      : "w-1.5 bg-foreground/40"
                   }`}
                 />
               ))}
@@ -232,7 +232,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         )}
 
         {/* Softened overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-50" />
 
         {/* Action Icons Overlay */}
         <div className="absolute top-4 right-4 flex gap-2 z-20">
@@ -250,9 +250,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="p-2.5 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-white/20 hover:scale-110 transition-all"
+                    className="p-2.5 rounded-full bg-background/40 backdrop-blur-xl border border-foreground/10 hover:bg-foreground/20 hover:scale-110 transition-all text-foreground"
                   >
-                    <FaGithub className="text-white text-sm" />
+                    <FaGithub className="text-sm" />
                   </a>
                 )}
                 {project.url && (
@@ -261,9 +261,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="p-2.5 rounded-full bg-black/40 backdrop-blur-xl border border-white/10 hover:bg-white/20 hover:scale-110 transition-all"
+                    className="p-2.5 rounded-full bg-background/40 backdrop-blur-xl border border-foreground/10 hover:bg-foreground/20 hover:scale-110 transition-all text-foreground"
                   >
-                    <FiGlobe className="text-white text-sm" />
+                    <FiGlobe className="text-sm" />
                   </a>
                 )}
               </motion.div>
@@ -275,7 +275,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 e.stopPropagation();
                 onToggle();
               }}
-              className="hidden lg:flex p-2.5 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all border border-white/20 shadow-lg"
+              className="hidden lg:flex p-2.5 rounded-full bg-foreground/10 backdrop-blur-md text-foreground hover:bg-foreground/20 transition-all border border-foreground/20 shadow-lg"
             >
               <FaChevronUp className="text-sm" />
             </button>
@@ -290,10 +290,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               animate={{ opacity: 1, y: 0 }}
               className="space-y-1.5 sm:space-y-2"
             >
-              <span className="text-white/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] bg-white/5 px-2.5 py-1 rounded-full border border-white/10 backdrop-blur-md inline-block mb-1 sm:mb-0">
+              <span className="text-foreground/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] bg-foreground/5 px-2.5 py-1 rounded-full border border-foreground/10 backdrop-blur-md inline-block mb-1 sm:mb-0">
                 Project Deep Dive
               </span>
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white title-font drop-shadow-2xl tracking-tight leading-none">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground title-font drop-shadow-2xl tracking-tight leading-none">
                 {project.title}
               </h3>
             </motion.div>
@@ -305,12 +305,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       <motion.div
         layout
         className={`px-5 pb-6 pt-1 sm:px-8 sm:pb-8 sm:pt-2 flex-1 flex flex-col relative z-20 ${
-          isExpanded ? "bg-white/[0.01]" : ""
+          isExpanded ? "bg-foreground/[0.01]" : ""
         }`}
       >
         {!isExpanded && (
           <div className="mb-3 mt-2 sm:mt-0">
-            <h3 className="text-lg sm:text-xl font-bold title-font text-neutral-200 group-hover:text-white transition-colors mb-1.5 sm:mb-2 tracking-tight">
+            <h3 className="text-lg sm:text-xl font-bold title-font text-foreground/90 group-hover:text-foreground transition-colors mb-1.5 sm:mb-2 tracking-tight">
               {project.title}
             </h3>
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -351,14 +351,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     {Array.isArray(project.description) ? (
                       project.description.map((point, i) => (
                         <div key={i} className="flex gap-3 sm:gap-4 group/item">
-                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-white/30 group-hover/item:bg-white/60 transition-colors shrink-0" />
-                          <p className="text-sm sm:text-base leading-relaxed text-neutral-300 font-light">
+                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/30 group-hover/item:bg-foreground/60 transition-colors shrink-0" />
+                          <p className="text-sm sm:text-base leading-relaxed text-foreground/80 font-light">
                             {point}
                           </p>
                         </div>
                       ))
                     ) : (
-                      <p className="text-sm sm:text-base leading-relaxed text-neutral-300 font-light">
+                      <p className="text-sm sm:text-base leading-relaxed text-foreground/80 font-light">
                         {project.description}
                       </p>
                     )}
@@ -367,16 +367,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
                 {/* Tech Snapshot Column */}
                 <div className="lg:col-span-2 space-y-6">
-                  <div className="p-5 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/5 space-y-6">
+                  <div className="p-5 sm:p-6 rounded-2xl bg-foreground/[0.02] border border-foreground/5 space-y-6">
                     <div>
-                      <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-neutral-500 mb-4">
+                      <h4 className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-foreground/50 mb-4">
                         Technical Snapshot
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {project.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="text-[9px] sm:text-[10px] font-bold text-white/70 bg-white/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors cursor-default"
+                            className="text-[9px] sm:text-[10px] font-bold text-foreground/80 bg-foreground/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-colors cursor-default"
                           >
                             {tech}
                           </span>
@@ -384,21 +384,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                       </div>
                     </div>
 
-                    <div className="pt-6 sm:pt-8 border-t border-white/5 flex flex-col gap-3 sm:gap-4">
+                    <div className="pt-6 sm:pt-8 border-t border-foreground/5 flex flex-col gap-3 sm:gap-4">
                       {project.github && (
                         <a
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/10"
+                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all border border-foreground/10"
                         >
                           <div className="flex items-center gap-3">
-                            <FaGithub className="text-lg sm:text-xl text-white/70 group-hover/btn:text-white transition-colors" />
-                            <span className="text-xs sm:text-sm font-semibold text-white/70 group-hover/btn:text-white transition-colors">
+                            <FaGithub className="text-lg sm:text-xl text-foreground/70 group-hover/btn:text-foreground transition-colors" />
+                            <span className="text-xs sm:text-sm font-semibold text-foreground/70 group-hover/btn:text-foreground transition-colors">
                               Source Code
                             </span>
                           </div>
-                          <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-neutral-500 group-hover/btn:text-neutral-300 transition-colors">
+                          <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-foreground/50 group-hover/btn:text-foreground/80 transition-colors">
                             GitHub
                           </div>
                         </a>
@@ -433,13 +433,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                   e.stopPropagation();
                   onToggle();
                 }}
-                className="mt-6 sm:mt-8 pt-4 border-t border-white/5 flex items-center justify-between cursor-pointer group/close"
+                className="mt-6 sm:mt-8 pt-4 border-t border-foreground/5 flex items-center justify-between cursor-pointer group/close"
               >
-                <span className="text-[9px] sm:text-[10px] font-bold text-neutral-500 uppercase tracking-widest group-hover/close:text-white transition-colors">
+                <span className="text-[9px] sm:text-[10px] font-bold text-foreground/50 uppercase tracking-widest group-hover/close:text-foreground transition-colors">
                   Collapse Project
                 </span>
-                <div className="p-2 rounded-full bg-white/5 group-hover/close:bg-white/10 transition-colors">
-                  <FaChevronUp className="text-neutral-400 group-hover/close:text-white group-hover/close:-translate-y-0.5 transition-all text-[10px] sm:text-xs" />
+                <div className="p-2 rounded-full bg-foreground/5 group-hover/close:bg-foreground/10 transition-colors">
+                  <FaChevronUp className="text-foreground/60 group-hover/close:text-foreground group-hover/close:-translate-y-0.5 transition-all text-[10px] sm:text-xs" />
                 </div>
               </div>
             </motion.div>
@@ -450,17 +450,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               animate={{ opacity: 1 }}
               className="space-y-4 flex-1 flex flex-col justify-between"
             >
-              <p className="line-clamp-3 text-xs sm:text-sm text-neutral-400 font-light leading-relaxed">
+              <p className="line-clamp-3 text-xs sm:text-sm text-foreground/60 font-light leading-relaxed">
                 {Array.isArray(project.description)
                   ? project.description[0]
                   : project.description}
               </p>
 
-              <div className="pt-4 border-t border-white/5 flex items-center justify-between pointer-events-none mt-auto">
-                <span className="text-[8px] sm:text-[9px] font-bold text-neutral-500 uppercase tracking-[0.2em] group-hover:text-white transition-colors">
+              <div className="pt-4 border-t border-foreground/5 flex items-center justify-between pointer-events-none mt-auto">
+                <span className="text-[8px] sm:text-[9px] font-bold text-foreground/50 uppercase tracking-[0.2em] group-hover:text-foreground transition-colors">
                   Explore Project
                 </span>
-                <FaChevronDown className="text-neutral-600 group-hover:text-white group-hover:translate-y-0.5 transition-all text-[8px] sm:text-[9px]" />
+                <FaChevronDown className="text-foreground/40 group-hover:text-foreground group-hover:translate-y-0.5 transition-all text-[8px] sm:text-[9px]" />
               </div>
             </motion.div>
           )}
@@ -487,15 +487,15 @@ const Projects: React.FC = () => {
   return (
     <section
       id="projects"
-      className="pb-16 sm:pb-24 lg:pb-32 border-b border-neutral-800 scroll-mt-20"
+      className="pb-16 sm:pb-24 lg:pb-32 border-b border-foreground/10 scroll-mt-20"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         
         {/* --- HEADER --- */}
         <div className="flex flex-col xl:flex-row xl:items-end justify-between mb-10 sm:mb-12 md:mb-16 gap-6 sm:gap-8 md:gap-12 mt-12 sm:mt-16 lg:mt-24">
           <div className="max-w-2xl">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white">
-              My <br className="hidden sm:block" /> <span className="text-zinc-600">Projects.</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground">
+              My <br className="hidden sm:block" /> <span className="text-foreground/50">Projects.</span>
             </h1>
           </div>
         </div>
