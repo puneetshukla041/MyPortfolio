@@ -281,17 +281,17 @@ const Section1 = () => {
       case 'EXPLORER':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-            <div className="px-3 sm:px-5 py-3 text-[10px] sm:text-[11px] tracking-wide text-[#bbbbbb] flex justify-between items-center bg-transparent select-none cursor-pointer">
+            <div className="px-3 sm:px-5 py-3 text-[10px] sm:text-[11px] tracking-wide text-foreground/70 flex justify-between items-center bg-transparent select-none cursor-pointer">
               EXPLORER <MoreHorizontal size={14} className="cursor-pointer" />
             </div>
             <div className="flex flex-col">
-              <div className="px-1 py-1 flex items-center gap-1 text-[#cccccc] font-bold cursor-pointer hover:bg-white/5 transition-colors">
+              <div className="px-1 py-1 flex items-center gap-1 text-foreground font-bold cursor-pointer hover:bg-white/5 transition-colors">
                 <ChevronDown size={14} /> <span className="text-[10px] sm:text-[11px] font-bold">PORTFOLIO</span>
               </div>
               {Object.keys(FILES_CONTENT).map((file) => (
                 <div key={file} onClick={() => handleTabClick(file as TabName)}
                   className={`pl-3 sm:pl-5 py-1.5 flex items-center gap-2 cursor-pointer transition-colors text-[12px] sm:text-[13px] border-l-[3px]
-                    ${activeTab === file ? 'bg-white/10 text-white border-[#007acc]' : 'border-transparent text-[#cccccc] hover:bg-white/5 hover:text-white'}`}
+                    ${activeTab === file ? 'bg-white/10 text-white border-[#007acc]' : 'border-transparent text-foreground/80 hover:bg-white/5 hover:text-white'}`}
                 >
                    {file.endsWith('ts') && <FileJson size={14} className="text-[#3178c6] shrink-0" />}
                    {file.endsWith('css') && <Hash size={14} className="text-[#569cd6] shrink-0" />}
@@ -305,22 +305,22 @@ const Section1 = () => {
       case 'SEARCH':
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
-             <div className="px-3 sm:px-5 py-3 text-[10px] sm:text-[11px] tracking-wide text-[#bbbbbb]">SEARCH</div>
+             <div className="px-3 sm:px-5 py-3 text-[10px] sm:text-[11px] tracking-wide text-foreground/70">SEARCH</div>
              <div className="px-3 sm:px-4 mb-4">
-               <div className="bg-neutral-900 flex items-center px-2 py-1.5 rounded-sm border border-transparent focus-within:border-[#007acc] ring-1 ring-transparent focus-within:ring-[#007acc]">
+               <div className="bg-white/5 flex items-center px-2 py-1.5 rounded-sm border border-transparent focus-within:border-[#007acc] ring-1 ring-transparent focus-within:ring-[#007acc]">
                  <input type="text" placeholder="Search" 
-                   className="bg-transparent border-none outline-none text-white w-full text-[12px] sm:text-[13px] placeholder:text-[#858585]"
+                   className="bg-transparent border-none outline-none text-foreground w-full text-[12px] sm:text-[13px] placeholder:text-foreground/50"
                    value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                  />
                </div>
              </div>
              {searchQuery && (
-               <div className="px-3 sm:px-4 text-[11px] sm:text-xs text-[#cccccc]">
+               <div className="px-3 sm:px-4 text-[11px] sm:text-xs text-foreground/80">
                  {Object.entries(FILES_CONTENT).map(([name, content]) => (
                     content.toLowerCase().includes(searchQuery.toLowerCase()) && (
                       <div key={name} className="mb-3 cursor-pointer group" onClick={() => handleTabClick(name as TabName)}>
                         <div className="flex items-center gap-1.5 font-bold group-hover:text-white"><ChevronRight size={12}/> {name}</div>
-                        <div className="pl-5 text-[#858585] truncate opacity-70 group-hover:opacity-100 mt-0.5">...</div>
+                        <div className="pl-5 text-foreground/50 truncate opacity-70 group-hover:opacity-100 mt-0.5">...</div>
                       </div>
                     )
                  ))}
@@ -333,16 +333,16 @@ const Section1 = () => {
   };
 
   return (
-    <section className="relative w-full h-[100dvh] bg-neutral-950 text-[#cccccc] flex overflow-hidden font-sans selection:bg-[#264f78] selection:text-white z-10 [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]">
+    <section className="relative w-full h-[100dvh] bg-background text-foreground flex overflow-hidden font-sans selection:bg-[#264f78] selection:text-white z-10 [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]">
       
       {/* 1. ACTIVITY BAR (Hidden on Mobile) */}
       <div className="hidden md:flex flex-col w-12 bg-transparent border-r border-white/10 items-center py-3 gap-2 z-30 select-none shrink-0">
         {['EXPLORER', 'SEARCH', 'SCM', 'EXTENSIONS'].map((view) => (
             <Tooltip key={view} text={view}>
                 <motion.div 
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className={`p-2 border-l-2 ${activeView === view && isSidebarOpen ? 'border-white' : 'border-transparent'}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className={`p-2 border-l-2 ${activeView === view && isSidebarOpen ? 'border-white' : 'border-transparent'}`}
                 >
                     {view === 'EXPLORER' && <Files size={24} strokeWidth={1.5} className={`cursor-pointer ${activeView === view ? 'text-white' : 'text-[#858585] hover:text-white'}`} onClick={() => { setActiveView('EXPLORER'); setIsSidebarOpen(true); }} />}
                     {view === 'SEARCH' && <Search size={24} strokeWidth={1.5} className={`cursor-pointer ${activeView === view ? 'text-white' : 'text-[#858585] hover:text-white'}`} onClick={() => { setActiveView('SEARCH'); setIsSidebarOpen(true); }} />}
@@ -365,13 +365,13 @@ const Section1 = () => {
             x: isSidebarOpen ? 0 : (isMobile ? '-100%' : 0) 
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className={`flex flex-col bg-neutral-950 border-r border-white/10 overflow-hidden whitespace-nowrap z-50 h-full shrink-0 ${isMobile ? 'absolute top-0 left-0 shadow-2xl max-w-[300px]' : 'relative'}`}
+        className={`flex flex-col bg-background border-r border-white/10 overflow-hidden whitespace-nowrap z-50 h-full shrink-0 ${isMobile ? 'absolute top-0 left-0 shadow-2xl max-w-[300px]' : 'relative'}`}
       >
         {/* Mobile Sidebar Header */}
         {isMobile && (
             <div className="flex justify-between items-center p-4 border-b border-white/10">
-                <span className="text-[11px] font-bold text-[#858585]">MENU</span>
-                <X size={18} className="text-[#858585] cursor-pointer" onClick={() => setIsSidebarOpen(false)} />
+                <span className="text-[11px] font-bold text-foreground/70">MENU</span>
+                <X size={18} className="text-foreground/70 cursor-pointer" onClick={() => setIsSidebarOpen(false)} />
             </div>
         )}
         {renderSidebarContent()}
@@ -390,8 +390,8 @@ const Section1 = () => {
       <div className="flex-1 flex flex-col h-full relative bg-transparent z-10 min-w-0">
         
         {/* TABS BAR */}
-        <div className="flex bg-neutral-900/50 h-10 sm:h-9 items-center border-b border-white/10 select-none w-full overflow-hidden shrink-0">
-           <div className="md:hidden px-4 h-full flex items-center justify-center text-[#858585] hover:text-white cursor-pointer transition-colors" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+        <div className="flex bg-black/20 h-10 sm:h-9 items-center border-b border-white/10 select-none w-full overflow-hidden shrink-0">
+           <div className="md:hidden px-4 h-full flex items-center justify-center text-foreground/70 hover:text-white cursor-pointer transition-colors" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                <Menu size={18} />
            </div>
            
@@ -401,7 +401,7 @@ const Section1 = () => {
                  <motion.div key={tabName} onClick={() => handleTabClick(tabName)}
                    initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: "auto" }} exit={{ opacity: 0, width: 0 }}
                    transition={{ duration: 0.15 }}
-                   className={`group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 h-full text-[11px] sm:text-[13px] cursor-pointer border-r border-white/10 min-w-fit transition-colors relative overflow-hidden ${activeTab === tabName ? 'bg-white/10 text-white' : 'bg-transparent text-[#858585] hover:bg-white/5'}`}
+                   className={`group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 h-full text-[11px] sm:text-[13px] cursor-pointer border-r border-white/10 min-w-fit transition-colors relative overflow-hidden ${activeTab === tabName ? 'bg-white/10 text-white' : 'bg-transparent text-foreground/70 hover:bg-white/5'}`}
                  >
                     {tabName === 'developer.ts' && <FileJson size={14} className="text-[#3178c6] shrink-0" />}
                     {tabName === 'styles.css' && <Hash size={14} className="text-[#569cd6] shrink-0" />}
@@ -417,18 +417,18 @@ const Section1 = () => {
            
            <div className="flex-shrink-0 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 h-full bg-transparent border-l border-white/10">
              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="flex items-center justify-center w-7 h-7 sm:w-6 sm:h-6 rounded hover:bg-white/10 cursor-pointer" onClick={handleRunCode}>
-                {isRunning ? <Loader2 size={14} className="animate-spin text-white" /> : <Play size={14} className="text-[#cccccc]" />}
+                {isRunning ? <Loader2 size={14} className="animate-spin text-white" /> : <Play size={14} className="text-foreground/80 hover:text-white" />}
              </motion.div>
              <div className="hidden sm:flex gap-3">
-                 <Split size={14} className="text-[#cccccc] cursor-pointer hover:text-white" />
-                 <MoreVertical size={14} className="text-[#cccccc] cursor-pointer hover:text-white" />
+                 <Split size={14} className="text-foreground/80 cursor-pointer hover:text-white" />
+                 <MoreVertical size={14} className="text-foreground/80 cursor-pointer hover:text-white" />
              </div>
            </div>
         </div>
 
         {/* BREADCRUMBS */}
-        <div className="flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-0.5 text-[10px] sm:text-[11px] text-[#858585] bg-transparent border-b border-white/5 overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
-           <span>portfolio</span> <ChevronRight size={10} className="shrink-0"/> <span>src</span> <ChevronRight size={10} className="shrink-0"/> <span className="text-white/80">{activeTab}</span>
+        <div className="flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-0.5 text-[10px] sm:text-[11px] text-foreground/60 bg-transparent border-b border-white/5 overflow-x-auto no-scrollbar whitespace-nowrap shrink-0">
+           <span>portfolio</span> <ChevronRight size={10} className="shrink-0"/> <span>src</span> <ChevronRight size={10} className="shrink-0"/> <span className="text-foreground/90">{activeTab}</span>
         </div>
 
         {/* EDITOR CONTENT */}
@@ -451,7 +451,7 @@ const Section1 = () => {
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="absolute bottom-6 md:bottom-12 right-4 md:right-6 z-50 bg-[#252526] border border-white/10 shadow-2xl rounded-lg w-[280px] md:w-[320px] overflow-hidden"
             >
-              <div className="flex items-center justify-between px-3 py-2 bg-neutral-900 border-b border-white/10">
+              <div className="flex items-center justify-between px-3 py-2 bg-black/40 border-b border-white/10">
                  <span className="text-[10px] md:text-[11px] font-bold text-white flex items-center gap-2"><Terminal size={12} className="text-[#007acc]" /> Build Config</span>
                  <X size={12} className="cursor-pointer text-[#858585] hover:text-white" onClick={() => setShowToast(false)}/>
               </div>
