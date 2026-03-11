@@ -1,16 +1,16 @@
 "use client";
 
 import { StaticImageData } from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Transition } from "framer-motion";
 import {
-  FaGithub,
-  FaChevronDown,
-  FaChevronUp,
-  FaChevronLeft,
-  FaChevronRight,
-  FaLayerGroup,
-} from "react-icons/fa";
-import { FiGlobe } from "react-icons/fi";
+  Github,
+  ChevronDown,
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+  Globe
+} from "lucide-react";
 import { useState, MouseEvent } from "react";
 
 // =====================================================
@@ -29,71 +29,60 @@ export interface Project {
 }
 
 // =====================================================
-// GLOBAL ANIMATION CONFIG
-// =====================================================
-
-const SPRING_TRANSITION = {
-  type: "spring",
-  stiffness: 85,
-  damping: 15,
-  mass: 0.8,
-};
-
-// =====================================================
 // PROJECTS DATA
 // =====================================================
 export const PROJECTS: Project[] = [
-{
-  title: "SSI STUDIOS",
-  image: "/images/ssistudios.png",
-  imageAlt: "SSI Studios Asset Automation Platform",
-  images: ["/images/ssistudios.png"],
-  url: "https://ssistudios.vercel.app",
-  github: "",
-  description: [
-    "Architected and developed SSI Studios, a full-stack internal platform that automates the creation, management, and distribution of digital assets such as certificates, ID cards, visiting cards, posters, and invitations.",
-    "Implemented a modular Next.js App Router architecture with scalable API routes, MongoDB data models, and optimized workflows for large-scale asset generation and batch operations.",
-    "Built automated generators and processing tools including certificate creation, visiting card and ID card rendering, background removal, PDF generation, and Excel import/export pipelines.",
-    "Engineered a real-time analytics dashboard to monitor certificate usage, system activity, and asset generation metrics with dynamic updates and performance tracking.",
-    "Integrated cloud services including AWS S3, Cloudinary, and SendGrid to enable scalable media storage, automated email distribution, and secure asset delivery.",
-    "Optimized platform performance by reducing network requests, implementing code splitting and tree-shaking, and improving UI responsiveness with a modular component architecture."
-  ],
-  technologies: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "MongoDB",
-    "AWS S3",
-    "Cloudinary",
-    "SendGrid",
-    "Tailwind CSS"
-  ],
-},
-{
-  title: "SMRSC 2026 Platform",
-  image: "/images/smrsc.png",
-  imageAlt: "SMRSC 2026 Global Robotic Surgery Conference Platform",
-  images: ["/images/smrsc.png"],
-  url: "https://www.ssinnovations.com/SMRSC_2026/home/",
-  github: "",
-  description: [
-    "Architected and developed the official web platform for SMRSC 2026, a global robotic surgery conference connecting surgeons, healthcare leaders, and innovators exploring the future of connected surgical care.",
-    "Built the platform using Next.js App Router with a full-stack architecture, integrating frontend UI and backend API routes within a single scalable application.",
-    "Implemented dynamic conference modules including schedules, faculty profiles, venue information, media content, and seamless event registration workflows.",
-    "Developed interactive UI experiences with Framer Motion, Lenis smooth scrolling, and responsive Tailwind components to deliver a high-performance, immersive conference website.",
-    "Integrated MongoDB and custom API routes to track visitor analytics and manage dynamic content across multiple sections of the platform."
-  ],
-  technologies: [
-    "Next.js",
-    "React",
-    "TypeScript",
-    "Tailwind CSS",
-    "Framer Motion",
-    "MongoDB",
-    "Mongoose",
-    "Lenis"
-  ],
-},
+  {
+    title: "SSI STUDIOS",
+    image: "/images/ssistudios.png",
+    imageAlt: "SSI Studios Asset Automation Platform",
+    images: ["/images/ssistudios.png"],
+    url: "https://ssistudios.vercel.app",
+    github: "",
+    description: [
+      "Architected and developed SSI Studios, a full-stack internal platform that automates the creation, management, and distribution of digital assets such as certificates, ID cards, visiting cards, posters, and invitations.",
+      "Implemented a modular Next.js App Router architecture with scalable API routes, MongoDB data models, and optimized workflows for large-scale asset generation and batch operations.",
+      "Built automated generators and processing tools including certificate creation, visiting card and ID card rendering, background removal, PDF generation, and Excel import/export pipelines.",
+      "Engineered a real-time analytics dashboard to monitor certificate usage, system activity, and asset generation metrics with dynamic updates and performance tracking.",
+      "Integrated cloud services including AWS S3, Cloudinary, and SendGrid to enable scalable media storage, automated email distribution, and secure asset delivery.",
+      "Optimized platform performance by reducing network requests, implementing code splitting and tree-shaking, and improving UI responsiveness with a modular component architecture."
+    ],
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "MongoDB",
+      "AWS S3",
+      "Cloudinary",
+      "SendGrid",
+      "Tailwind CSS"
+    ],
+  },
+  {
+    title: "SMRSC 2026 Platform",
+    image: "/images/smrsc.png",
+    imageAlt: "SMRSC 2026 Global Robotic Surgery Conference Platform",
+    images: ["/images/smrsc.png"],
+    url: "https://www.ssinnovations.com/SMRSC_2026/home/",
+    github: "",
+    description: [
+      "Architected and developed the official web platform for SMRSC 2026, a global robotic surgery conference connecting surgeons, healthcare leaders, and innovators exploring the future of connected surgical care.",
+      "Built the platform using Next.js App Router with a full-stack architecture, integrating frontend UI and backend API routes within a single scalable application.",
+      "Implemented dynamic conference modules including schedules, faculty profiles, venue information, media content, and seamless event registration workflows.",
+      "Developed interactive UI experiences with Framer Motion, Lenis smooth scrolling, and responsive Tailwind components to deliver a high-performance, immersive conference website.",
+      "Integrated MongoDB and custom API routes to track visitor analytics and manage dynamic content across multiple sections of the platform."
+    ],
+    technologies: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "MongoDB",
+      "Mongoose",
+      "Lenis"
+    ],
+  },
   {
     title: "SSI CRS",
     image: "/images/ssicrs.png", 
@@ -108,36 +97,46 @@ export const PROJECTS: Project[] = [
     ],
     technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
   },
-    {
+  {
     title: "MediLens Clinical Intelligence Platform",
     image: "/images/medilens.png", 
     imageAlt: "MediLens Clinical Intelligence Dashboard showing medical imaging and speech biomarker data",
     images: ["/images/medilens.png"],
     url: "https://medilenss.vercel.app/",
     github: "",
-description: [
-  "Built MediLens, a production-grade multimodal AI diagnostic platform that integrates retinal imaging, chest X-rays, ECG signals, speech biomarkers, dermatology analysis, and cognitive testing into a unified clinical dashboard.",
-  "Developed a full-stack architecture using Next.js and FastAPI with modular AI pipelines enabling real-time medical analysis across multiple diagnostic modules with sub-3-second processing.",
-  "Implemented explainable AI capabilities including Grad-CAM visual heatmaps, biomarker breakdowns, and LLM-generated clinical explanations for transparent and interpretable diagnostics.",
-  "Integrated cloud services such as Amazon Polly for voice-based clinical summaries and built secure, scalable APIs with audit logging and real-time system monitoring for healthcare-grade reliability."
-],
+    description: [
+      "Built MediLens, a production-grade multimodal AI diagnostic platform that integrates retinal imaging, chest X-rays, ECG signals, speech biomarkers, dermatology analysis, and cognitive testing into a unified clinical dashboard.",
+      "Developed a full-stack architecture using Next.js and FastAPI with modular AI pipelines enabling real-time medical analysis across multiple diagnostic modules with sub-3-second processing.",
+      "Implemented explainable AI capabilities including Grad-CAM visual heatmaps, biomarker breakdowns, and LLM-generated clinical explanations for transparent and interpretable diagnostics.",
+      "Integrated cloud services such as Amazon Polly for voice-based clinical summaries and built secure, scalable APIs with audit logging and real-time system monitoring for healthcare-grade reliability."
+    ],
     technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "PyTorch"],
   },
-    {
+  {
     title: "Black Hole Simulation",
     image: "/images/blackhole.png", 
     imageAlt: "Black Hole Simulation Visualization",
     images: ["/images/blackhole.png"],
     url: "https://blackhole-nu-red.vercel.app/",
     github: "",
-description: [
-  "Developed a real-time, interactive WebGL simulation of Schwarzschild/Kerr black holes using General Relativistic Ray Marching and GLSL.",
-  "Implemented physically accurate gravitational lensing, volumetric accretion disks with Doppler beaming, and optimized adaptive step sizing for high-performance rendering.",
-],
+    description: [
+      "Developed a real-time, interactive WebGL simulation of Schwarzschild/Kerr black holes using General Relativistic Ray Marching and GLSL.",
+      "Implemented physically accurate gravitational lensing, volumetric accretion disks with Doppler beaming, and optimized adaptive step sizing for high-performance rendering.",
+    ],
     technologies: ["Next.js", "WebGL", "GLSL", "TypeScript", "React"],
   },
-
 ];
+
+// =====================================================
+// ANIMATION CONFIG
+// =====================================================
+// Unified smooth spring transition for all layout changes
+const springTransition: Transition = {
+  type: "spring",
+  stiffness: 220,
+  damping: 24,
+  mass: 1.1,
+};
 
 // =====================================================
 // COMPONENTS
@@ -179,9 +178,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <motion.div
       layout
-      transition={SPRING_TRANSITION}
+      transition={springTransition}
       onClick={onToggle}
-      className={`group cursor-pointer flex flex-col relative overflow-hidden rounded-2xl bg-transparent backdrop-blur-none border-0 z-0 transition-shadow duration-500
+      // Removed transition-all and duration classes from here to let Framer Motion handle it
+      className={`group cursor-pointer flex flex-col relative overflow-hidden rounded-2xl bg-transparent backdrop-blur-none border-0 z-0
         ${
           isExpanded
             ? "h-auto shadow-[0_0_80px_-20px_rgba(255,255,255,0.05)]"
@@ -216,13 +216,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       />
 
       {/* Premium Liquid Accents */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300 z-40"></div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity z-40"></div>
       <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.05] via-transparent to-transparent pointer-events-none z-30"></div>
 
       {/* Project Image Area with Progressive Mask */}
       <motion.div
         layout
-        transition={SPRING_TRANSITION}
+        transition={springTransition}
+        // Removed CSS transitions to avoid layout jumping
         className={`relative overflow-hidden z-10
           ${isExpanded ? "h-[250px] sm:h-[400px] lg:h-[500px]" : "h-[200px] sm:h-[240px]"}`}
         style={{
@@ -232,15 +233,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       >
         <AnimatePresence mode="wait">
           <motion.img
+            layout // Added layout here so image scales perfectly with the container
+            transition={springTransition}
             key={currentImageIndex}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
             src={getImgSrc(images[isExpanded ? currentImageIndex : 0])}
             alt={project.imageAlt || `${project.title} screenshot`}
-            className={`w-full h-full object-cover object-top transition-transform duration-700 ${
-              !isExpanded ? "group-hover:scale-110" : ""
+            // Removed duration-700 from here to let FM control the layout transformation
+            className={`w-full h-full object-cover object-top ${
+              !isExpanded ? "transition-transform duration-700 group-hover:scale-110" : ""
             }`}
           />
         </AnimatePresence>
@@ -248,7 +251,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Fallback Placeholder (if no image at all) */}
         {!images.length && (
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-blue-500/10 flex items-center justify-center">
-            <FaLayerGroup className="text-foreground/10 text-6xl" />
+            <Layers className="text-foreground/10 w-12 h-12 sm:w-16 sm:h-16" />
           </div>
         )}
 
@@ -258,17 +261,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4 z-40">
               <button
                 onClick={prevImage}
-                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground/20 hover:text-background"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
               >
-                <FaChevronLeft className="text-xs sm:text-sm" />
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 z-40">
               <button
                 onClick={nextImage}
-                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground/20 hover:text-background"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
               >
-                <FaChevronRight className="text-xs sm:text-sm" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             {/* Carousel Dots */}
@@ -288,7 +291,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         )}
 
         {/* Softened overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-50" />
 
         {/* Action Icons Overlay */}
         <div className="absolute top-4 right-4 flex gap-2 z-20">
@@ -298,7 +301,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
                 className="flex gap-2"
               >
                 {project.github && (
@@ -309,7 +311,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     onClick={(e) => e.stopPropagation()}
                     className="p-2.5 rounded-full bg-background/40 backdrop-blur-xl border border-foreground/10 hover:bg-foreground/20 hover:scale-110 transition-all text-foreground"
                   >
-                    <FaGithub className="text-sm" />
+                    <Github className="w-4 h-4" />
                   </a>
                 )}
                 {project.url && (
@@ -320,7 +322,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     onClick={(e) => e.stopPropagation()}
                     className="p-2.5 rounded-full bg-background/40 backdrop-blur-xl border border-foreground/10 hover:bg-foreground/20 hover:scale-110 transition-all text-foreground"
                   >
-                    <FiGlobe className="text-sm" />
+                    <Globe className="w-4 h-4" />
                   </a>
                 )}
               </motion.div>
@@ -334,18 +336,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               }}
               className="hidden lg:flex p-2.5 rounded-full bg-foreground/10 backdrop-blur-md text-foreground hover:bg-foreground/20 transition-all border border-foreground/20 shadow-lg"
             >
-              <FaChevronUp className="text-sm" />
+              <ChevronUp className="w-4 h-4" />
             </button>
           )}
         </div>
 
         {/* Title Overlay for Expanded Card */}
         {isExpanded && (
-          <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 z-10 pointer-events-none">
+          <div className="absolute bottom-6 sm:bottom-8 left-6 sm:right-8 z-10">
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.1 } }}
               className="space-y-1.5 sm:space-y-2"
             >
               <span className="text-foreground/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] bg-foreground/5 px-2.5 py-1 rounded-full border border-foreground/10 backdrop-blur-md inline-block mb-1 sm:mb-0">
@@ -362,7 +363,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {/* Card Content Area */}
       <motion.div
         layout
-        transition={SPRING_TRANSITION}
+        transition={springTransition}
         className={`px-5 pb-6 pt-1 sm:px-8 sm:pb-8 sm:pt-2 flex-1 flex flex-col relative z-20 ${
           isExpanded ? "bg-foreground/[0.01]" : ""
         }`}
@@ -376,7 +377,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               {project.technologies.slice(0, 3).map((tech, i) => (
                 <span
                   key={i}
-                  className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-purple-300/80 group-hover:text-purple-300 transition-colors duration-300"
+                  className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-purple-300/80 group-hover:text-purple-300 transition-colors"
                 >
                   {tech}
                   {i < 2 ? " •" : ""}
@@ -390,10 +391,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           {isExpanded ? (
             <motion.div
               key="expanded"
+              // Optimized animation entry/exit to sync perfectly with the layout stretch
               initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.2, duration: 0.4 } }}
+              exit={{ opacity: 0, y: -10, transition: { duration: 0.1 } }}
               className="w-full space-y-8 mt-4 sm:mt-6"
             >
               {/* Organized Info Grid */}
@@ -411,7 +412,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     {Array.isArray(project.description) ? (
                       project.description.map((point, i) => (
                         <div key={i} className="flex gap-3 sm:gap-4 group/item">
-                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/30 group-hover/item:bg-foreground/60 transition-colors duration-300 shrink-0" />
+                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/30 group-hover/item:bg-foreground/60 transition-colors shrink-0" />
                           <p className="text-sm sm:text-base leading-relaxed text-foreground/80 font-light">
                             {point}
                           </p>
@@ -436,7 +437,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                         {project.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="text-[9px] sm:text-[10px] font-bold text-foreground/80 bg-foreground/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-colors duration-300 cursor-default"
+                            className="text-[9px] sm:text-[10px] font-bold text-foreground/80 bg-foreground/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-colors cursor-default"
                           >
                             {tech}
                           </span>
@@ -450,10 +451,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all duration-300 border border-foreground/10"
+                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all border border-foreground/10"
                         >
                           <div className="flex items-center gap-3">
-                            <FaGithub className="text-lg sm:text-xl text-foreground/70 group-hover/btn:text-foreground transition-colors" />
+                            <Github className="w-5 h-5 sm:w-6 sm:h-6 text-foreground/70 group-hover/btn:text-foreground transition-colors" />
                             <span className="text-xs sm:text-sm font-semibold text-foreground/70 group-hover/btn:text-foreground transition-colors">
                               Source Code
                             </span>
@@ -469,10 +470,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                           href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-indigo-500/5 hover:bg-indigo-500/15 transition-all duration-300 border border-indigo-500/20"
+                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-indigo-500/5 hover:bg-indigo-500/15 transition-all border border-indigo-500/20"
                         >
                           <div className="flex items-center gap-3">
-                            <FiGlobe className="text-base sm:text-lg text-indigo-400/70 group-hover/btn:text-indigo-400 transition-colors" />
+                            <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-400/70 group-hover/btn:text-indigo-400 transition-colors" />
                             <span className="text-xs sm:text-sm font-semibold text-indigo-300/70 group-hover/btn:text-indigo-300 transition-colors">
                               Live Demo
                             </span>
@@ -495,11 +496,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 }}
                 className="mt-6 sm:mt-8 pt-4 border-t border-foreground/5 flex items-center justify-between cursor-pointer group/close"
               >
-                <span className="text-[9px] sm:text-[10px] font-bold text-foreground/50 uppercase tracking-widest group-hover/close:text-foreground transition-colors duration-300">
+                <span className="text-[9px] sm:text-[10px] font-bold text-foreground/50 uppercase tracking-widest group-hover/close:text-foreground transition-colors">
                   Collapse Project
                 </span>
-                <div className="p-2 rounded-full bg-foreground/5 group-hover/close:bg-foreground/10 transition-colors duration-300">
-                  <FaChevronUp className="text-foreground/60 group-hover/close:text-foreground group-hover/close:-translate-y-0.5 transition-all text-[10px] sm:text-xs" />
+                <div className="p-2 rounded-full bg-foreground/5 group-hover/close:bg-foreground/10 transition-colors">
+                  <ChevronUp className="text-foreground/60 group-hover/close:text-foreground group-hover/close:-translate-y-0.5 transition-all w-3 h-3 sm:w-4 sm:h-4" />
                 </div>
               </div>
             </motion.div>
@@ -507,9 +508,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <motion.div
               key="collapsed"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              // Added delay to fade in AFTER the layout scales down, ensuring no overflow
+              animate={{ opacity: 1, transition: { delay: 0.15 } }}
+              // Fast exit to instantly make room for the expansion
+              exit={{ opacity: 0, transition: { duration: 0.1 } }}
               className="space-y-4 flex-1 flex flex-col justify-between"
             >
               <p className="line-clamp-3 text-xs sm:text-sm text-foreground/60 font-light leading-relaxed">
@@ -519,10 +521,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </p>
 
               <div className="pt-4 border-t border-foreground/5 flex items-center justify-between pointer-events-none mt-auto">
-                <span className="text-[8px] sm:text-[9px] font-bold text-foreground/50 uppercase tracking-[0.2em] group-hover:text-foreground transition-colors duration-300">
+                <span className="text-[8px] sm:text-[9px] font-bold text-foreground/50 uppercase tracking-[0.2em] group-hover:text-foreground transition-colors">
                   Explore Project
                 </span>
-                <FaChevronDown className="text-foreground/40 group-hover:text-foreground group-hover:translate-y-0.5 transition-all text-[8px] sm:text-[9px]" />
+                <ChevronDown className="text-foreground/40 group-hover:text-foreground group-hover:translate-y-0.5 transition-all w-3 h-3 sm:w-4 sm:h-4" />
               </div>
             </motion.div>
           )}
@@ -536,14 +538,16 @@ const Projects: React.FC = () => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const toggleExpand = (id: number) => {
-    setExpandedId(expandedId === id ? null : id);
-    if (expandedId !== id) {
-      // Increased timeout slightly so the scroll triggers right as the layout finishes expanding
+    const isExpanding = expandedId !== id;
+    setExpandedId(isExpanding ? id : null);
+    
+    if (isExpanding) {
+      // Shorter timeout to ride alongside the spring animation
       setTimeout(() => {
         document
           .getElementById(`project-${id}`)
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 450); 
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 150); 
     }
   };
 
@@ -566,7 +570,7 @@ const Projects: React.FC = () => {
         {/* --- GRID --- */}
         <motion.div 
           layout 
-          transition={SPRING_TRANSITION}
+          transition={springTransition}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 auto-rows-min"
         >
           {PROJECTS.map((project, index) => {
@@ -574,10 +578,15 @@ const Projects: React.FC = () => {
             return (
               <motion.div
                 layout
-                transition={SPRING_TRANSITION}
+                transition={springTransition}
                 id={`project-${index}`}
                 key={`${project.title}-${index}`}
-                className={isExpanded ? "col-span-1 md:col-span-2 lg:col-span-2 z-10" : "col-span-1 z-0"}
+                // Removed CSS transitions from the wrapper layout block
+                className={`${
+                  isExpanded
+                    ? "col-span-1 md:col-span-2 lg:col-span-2 z-10"
+                    : "col-span-1 z-0"
+                }`}
               >
                 <ProjectCard
                   project={project}
