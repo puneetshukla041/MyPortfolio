@@ -110,7 +110,7 @@ description: [
   "Implemented explainable AI capabilities including Grad-CAM visual heatmaps, biomarker breakdowns, and LLM-generated clinical explanations for transparent and interpretable diagnostics.",
   "Integrated cloud services such as Amazon Polly for voice-based clinical summaries and built secure, scalable APIs with audit logging and real-time system monitoring for healthcare-grade reliability."
 ],
-    technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
+    technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "PyTorch"],
   },
 ];
 
