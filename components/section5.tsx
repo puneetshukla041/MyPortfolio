@@ -26,6 +26,64 @@ const VideoPreloadContext = createContext<{
 
 
 // ===========================================================================
+// SECTION INTRO (NEW)
+// ===========================================================================
+const SectionIntro = () => {
+  return (
+    <section className="relative w-full bg-black py-32 md:py-48 flex flex-col items-center justify-center text-center px-6 overflow-hidden border-b border-white/10">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[1px] bg-gradient-to-r from-transparent via-neutral-600 to-transparent opacity-30" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto space-y-8">
+        <div className="flex items-center gap-3 text-neutral-500 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Clapperboard className="w-4 h-4" />
+          <span className="text-[10px] font-mono tracking-[0.4em] uppercase font-bold">Beyond The Code</span>
+        </div>
+        
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white tracking-tighter leading-tight opacity-0 animate-cinematic-up" style={{ animationDelay: '0.4s' }}>
+          Filmmaking & <br className="md:hidden" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-400 via-white to-neutral-500">
+            Cinematography
+          </span>
+        </h2>
+
+        <div className="w-[1px] h-16 bg-gradient-to-b from-neutral-500 to-transparent mx-auto opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.6s' }} />
+
+        <p className="text-sm md:text-base lg:text-lg font-light leading-relaxed text-neutral-400 font-serif italic max-w-2xl opacity-0 animate-cinematic-fade" style={{ animationDelay: '0.8s' }}>
+          "While my professional focus lies in architecting software and engineering web platforms, 
+          my creative pursuit lives behind the lens. Filmmaking is my medium to capture raw emotion, 
+          ambient light, and compelling narratives. Here is a glimpse into my visual stories."
+        </p>
+      </div>
+
+      <style>{`
+        @keyframes fade-in-slow {
+          0% { opacity: 0; transform: translateY(10px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes cinematic-up {
+          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
+          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes cinematic-fade {
+          0% { opacity: 0; filter: blur(2px); }
+          100% { opacity: 1; filter: blur(0); }
+        }
+        @keyframes cinematic-grow {
+          0% { opacity: 0; height: 0px; }
+          100% { opacity: 1; height: 64px; } 
+        }
+        .animate-fade-in { animation: fade-in-slow 1.5s ease-out forwards; }
+        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
+        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+      `}</style>
+    </section>
+  );
+};
+
+
+// ===========================================================================
 // SECTION 3
 // ===========================================================================
 const Section3 = () => {
@@ -229,9 +287,9 @@ const Section3 = () => {
           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent mx-auto md:mx-0 opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.5s' }} />
 
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-400 opacity-0 animate-cinematic-up font-serif italic" style={{ animationDelay: '0.8s' }}>
-            &quot;In the sacred lanes of Vrindavan, colors aren&apos;t just thrown—they are lived. 
+            "In the sacred lanes of Vrindavan, colors aren't just thrown—they are lived. 
             Witness the eternal dance where the divine love of Radha and Krishna 
-            dissolves the boundaries between the human and the celestial.&quot;
+            dissolves the boundaries between the human and the celestial."
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 opacity-0 animate-cinematic-fade" style={{ animationDelay: '1.2s' }}>
@@ -244,29 +302,6 @@ const Section3 = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fade-in-slow {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cinematic-up {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cinematic-fade {
-          0% { opacity: 0; filter: blur(2px); }
-          100% { opacity: 1; filter: blur(0); }
-        }
-        @keyframes cinematic-grow {
-          0% { opacity: 0; height: 0px; }
-          100% { opacity: 1; } 
-        }
-        .animate-fade-in { animation: fade-in-slow 1s ease-out forwards; }
-        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
-        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-      `}</style>
     </section>
   );
 };
@@ -478,9 +513,9 @@ const Section4 = () => {
           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent mx-auto md:mx-0 opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.5s' }} />
 
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-400 opacity-0 animate-cinematic-up font-serif italic" style={{ animationDelay: '0.8s' }}>
-            &quot;Before the city wakes, the streets erupt in a chaotic symphony of fragrance and color. 
+            "Before the city wakes, the streets erupt in a chaotic symphony of fragrance and color. 
             Marigolds, roses, and jasmine flood the alleyways, painting the dawn 
-            with the vibrant soul of the capital.&quot;
+            with the vibrant soul of the capital."
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 opacity-0 animate-cinematic-fade" style={{ animationDelay: '1.2s' }}>
@@ -493,29 +528,6 @@ const Section4 = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fade-in-slow {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cinematic-up {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cinematic-fade {
-          0% { opacity: 0; filter: blur(2px); }
-          100% { opacity: 1; filter: blur(0); }
-        }
-        @keyframes cinematic-grow {
-          0% { opacity: 0; height: 0px; }
-          100% { opacity: 1; } 
-        }
-        .animate-fade-in { animation: fade-in-slow 1s ease-out forwards; }
-        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
-        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-      `}</style>
     </section>
   );
 };
@@ -727,9 +739,9 @@ const SectionBombay = () => {
           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent mx-auto md:mx-0 opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.5s' }} />
 
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-400 opacity-0 animate-cinematic-up font-serif italic" style={{ animationDelay: '0.8s' }}>
-            &quot;The sea breeze carries the stories of a million dreams. As the first light 
-            hits the Queen&apos;s Necklace, the city shakes off its slumber, ready to 
-            conquer another day in the city that never sleeps.&quot;
+            "The sea breeze carries the stories of a million dreams. As the first light 
+            hits the Queen's Necklace, the city shakes off its slumber, ready to 
+            conquer another day in the city that never sleeps."
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 opacity-0 animate-cinematic-fade" style={{ animationDelay: '1.2s' }}>
@@ -742,29 +754,6 @@ const SectionBombay = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fade-in-slow {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cinematic-up {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cinematic-fade {
-          0% { opacity: 0; filter: blur(2px); }
-          100% { opacity: 1; filter: blur(0); }
-        }
-        @keyframes cinematic-grow {
-          0% { opacity: 0; height: 0px; }
-          100% { opacity: 1; } 
-        }
-        .animate-fade-in { animation: fade-in-slow 1s ease-out forwards; }
-        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
-        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-      `}</style>
     </section>
   );
 };
@@ -921,7 +910,7 @@ const SectionNature = () => {
                 ${showIntro && !isLoading ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-110 blur-md'}
               `}
             >
-                <div className="space-y-2 md:space-y-4 mix-blend-overlay">
+               <div className="space-y-2 md:space-y-4 mix-blend-overlay">
                 <p className="text-[8px] md:text-[10px] font-bold tracking-[0.6em] text-white/80 uppercase">
                   Directed By
                 </p>
@@ -961,7 +950,7 @@ const SectionNature = () => {
                 <span className="text-[9px] font-mono tracking-[0.3em] uppercase">Ethereal Canvas</span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-[0.9]">
-               Nature&apos;s <br/>
+               Nature's <br/>
                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-200 via-white to-blue-400">
                  Palette
                </span>
@@ -971,7 +960,7 @@ const SectionNature = () => {
           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent mx-auto md:mx-0 opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.5s' }} />
 
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-400 opacity-0 animate-cinematic-up font-serif italic" style={{ animationDelay: '0.8s' }}>
-            &quot;The sky doesn&apos;t ask for attention, yet it commands it. In the gradient of the horizon, we find the colors of our own emotions—ever-changing, infinite, and beautifully untamed.&quot;
+            "The sky doesn't ask for attention, yet it commands it. In the gradient of the horizon, we find the colors of our own emotions—ever-changing, infinite, and beautifully untamed."
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 opacity-0 animate-cinematic-fade" style={{ animationDelay: '1.2s' }}>
@@ -984,34 +973,6 @@ const SectionNature = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fade-in-slow {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cinematic-up {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cinematic-fade {
-          0% { opacity: 0; filter: blur(2px); }
-          100% { opacity: 1; filter: blur(0); }
-        }
-        @keyframes cinematic-grow {
-          0% { opacity: 0; height: 0px; }
-          100% { opacity: 1; } 
-        }
-        @keyframes spin-slow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .animate-spin-slow { animation: spin-slow 12s linear infinite; }
-        .animate-fade-in { animation: fade-in-slow 1s ease-out forwards; }
-        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
-        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-      `}</style>
     </section>
   );
 };
@@ -1174,7 +1135,7 @@ const SectionDreams = () => {
                 ${showIntro && !isLoading ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-110 blur-md'}
               `}
             >
-                <div className="space-y-2 md:space-y-4 mix-blend-overlay">
+               <div className="space-y-2 md:space-y-4 mix-blend-overlay">
                 <p className="text-[8px] md:text-[10px] font-bold tracking-[0.6em] text-white/80 uppercase">
                   Directed By
                 </p>
@@ -1224,7 +1185,7 @@ const SectionDreams = () => {
           <div className="w-[1px] h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent mx-auto md:mx-0 opacity-0 animate-cinematic-grow" style={{ animationDelay: '0.5s' }} />
 
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-400 opacity-0 animate-cinematic-up font-serif italic" style={{ animationDelay: '0.8s' }}>
-            &quot;They told him to be realistic. They told him to follow the path. But the vision was too clear to ignore. Standing alone against the tide, it&apos;s not just about proving them wrong—it&apos;s about proving yourself right.&quot;
+            "They told him to be realistic. They told him to follow the path. But the vision was too clear to ignore. Standing alone against the tide, it's not just about proving them wrong—it's about proving yourself right."
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 opacity-0 animate-cinematic-fade" style={{ animationDelay: '1.2s' }}>
@@ -1237,29 +1198,6 @@ const SectionDreams = () => {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fade-in-slow {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cinematic-up {
-          0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(4px); }
-          100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
-        @keyframes cinematic-fade {
-          0% { opacity: 0; filter: blur(2px); }
-          100% { opacity: 1; filter: blur(0); }
-        }
-        @keyframes cinematic-grow {
-          0% { opacity: 0; height: 0px; }
-          100% { opacity: 1; } 
-        }
-        .animate-fade-in { animation: fade-in-slow 1s ease-out forwards; }
-        .animate-cinematic-up { animation: cinematic-up 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-cinematic-fade { animation: cinematic-fade 2s ease-in-out forwards; }
-        .animate-cinematic-grow { animation: cinematic-grow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-      `}</style>
     </section>
   );
 };
@@ -1316,6 +1254,7 @@ export default function CinematicShowcase() {
 
   return (
     <VideoPreloadContext.Provider value={{ videoSources }}>
+      <SectionIntro />
       <Section3 />
       <Section4 />
       <SectionBombay />
