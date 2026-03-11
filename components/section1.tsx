@@ -19,14 +19,17 @@ const FILES_CONTENT: Record<TabName, string> = {
 
 const puneet: Developer = {
   name: "Puneet Shukla",
-  role: "Software Engineer",
+  role: "Full Stack Developer",
   location: "India",
   
-  skills: {
-    languages: ["TypeScript", "JavaScript", "Python", "SQL"],
-    frameworks: ["Next.js", "React", "Node.js", "Tailwind"],
-    tools: ["Git", "Docker", "AWS", "Figma"]
-  },
+skills: {
+  languages: ["TypeScript", "JavaScript", "Python", "SQL"],
+  frameworks: ["Next.js", "React", "Node.js", "Tailwind", "Electron"],
+  databases: ["MongoDB", "MySQL"],
+  cloud_services: ["AWS S3", "AWS SES"],
+  tools: ["GitHub", "Figma"],
+  testing: ["Manual Testing", "Functional Testing"]
+}
 
   hardWorker: true,
   problemSolver: true,
