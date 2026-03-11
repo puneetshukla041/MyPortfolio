@@ -60,7 +60,7 @@ const timelineData: TimelineData[] = [
     logo: "/logos/medanta.png",
     type: "Internship",
     description: "Performed manual quality assurance testing on healthcare web applications, validating user workflows and reporting defects to improve reliability and user experience.",
-    points: ["Conducted manual QA testing on Medanta’s website and patient registration modules, identifying functional issues, broken links, and UI inconsistencies.", "Security vulnerability assessments."],
+    points: ["Conducted manual QA testing on Medanta’s website and patient registration modules, identifying functional issues, broken links, and UI inconsistencies.", "Validated end-to-end user flows and form submissions to ensure accurate data handling and smooth patient onboarding processes.", "Created structured bug reports and testing documentation in Excel, including reproduction steps and severity levels to support faster issue resolution."],
     tech: ["Python", "QA Automation", "Security"],
   },
   {
