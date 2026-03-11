@@ -35,8 +35,8 @@ const timelineData: TimelineData[] = [
     location: "Gurugram, India",
     logo: "/logos/ssi.jpeg",
     type: "Full-time",
-    description: "Built SSI Studios, an internal automation platform that streamlines digital asset creation, bulk generation, analytics, and distribution using Next.js, MongoDB, AWS S3, and Cloudinary.",
-    points: ["Developed an automated asset generation system for certificates, ID cards, visiting cards, posters, and invitations with bulk processing and export capabilities.", "Built analytics dashboards and system monitoring tools to track certificate usage, user activity, and platform performance.", "Implemented integrations with AWS S3, Cloudinary, SendGrid, and Google Generative AI for storage, media processing, and automated email distribution."],
+    description: "Built scalable web platforms and internal automation tools for robotic surgery initiatives, focusing on high-performance interfaces, asset automation, and data-driven dashboards using modern full-stack technologies.",
+    points: ["Developed the SMRSC2026 global conference platform with dynamic animated interfaces for schedules, faculty profiles, media content, and seamless registration workflows.", "Built analytics dashboards and system monitoring tools to track certificate usage, user activity, and platform performance.", "Implemented integrations with AWS S3, Cloudinary, SendGrid, and Google Generative AI for storage, media processing, and automated email distribution."],
     tech: ["Next.js", "React", "S3", "SES","Typescript","System Design"],
   },
   {
