@@ -88,7 +88,7 @@ export const PROJECTS: Project[] = [
     image: "/images/ssicrs.png", 
     imageAlt: "SSI CRS Training Portal",
     images: ["/images/ssicrs.png"],
-    url: "https://ssiscrsweb.vercel.app",
+    url: "https://ssicrsweb.vercel.app/Home",
     github: "",
     description: [
       "Architected a dedicated digital portal for healthcare professionals to register for specialized training programs on the SSI Mantra, India's first indigenous surgical robotic system.",
