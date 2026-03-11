@@ -32,43 +32,57 @@ export interface Project {
 // PROJECTS DATA
 // =====================================================
 export const PROJECTS: Project[] = [
-  {
-    title: "SSI STUDIOS",
-    image: "/images/ssistudios.png",
-    imageAlt: "SSI STUDIOS Platform Dashboard",
-    images: ["/images/ssistudios.png"],
-    url: "https://ssistudios.vercel.app",
-    github: "",
-    description: [
-      "Architected a full-stack Next.js web application for SS Innovations to automate manual design and data entry, replacing tedious Photoshop workflows with a centralized asset generation platform.",
-      "Developed automated design generators for ID Cards, Visiting Cards, Invitations, and Posters, programmatically handling text formatting, logo alignment, scaling, and background removal.",
-      "Built a Certificate Module with 'Smart Excel Import' for automated data cleaning, deduplication, and bulk email distribution via a custom mail API.",
-      "Engineered a real-time admin dashboard with custom analytics to track monthly usage trends, system status, and asset generation metrics without page reloads.",
-      "Designed a clean, accessible UI using React and Tailwind CSS, featuring dynamic Light/Dark themes, secure role-based authentication, and a built-in bug reporting tool."
-    ],
-    technologies: ["Next.js", "React", "Tailwind CSS", "Full-Stack", "Automation"],
-  },
-  {
-    title: "SMRSC 2026 Platform",
-    image: "/images/smrsc.png",
-    imageAlt: "SMRSC 2026 Global Conference Platform",
-    images: ["/images/smrsc.png"],
-    url: "https://www.ssinnovations.com/SMRSC_2026/home/",
-    github: "",
-    description: [
-      "Architected the official web platform for SMRSC (SSI Multi-Specialty Robotic Surgery Conference), a global event uniting surgeons, innovators, and healthcare leaders to explore the future of connected surgical care.",
-      "Engineered a 'Next-Level' interactive venue map with Framer Motion, featuring fully responsive glassmorphic UI elements, animated path drawing, traveling data-packet animations, and fluid mobile-to-desktop layout transitions.",
-      "Developed complex, dynamic UI sections including floating 'Clinical Outcomes' grids, utilizing advanced CSS viewport units and mathematical scaling to ensure a flawless experience across all devices.",
-      "Delivered a premium, high-performance digital hub for attendees to access live robotic procedure demonstrations, schedules, and the latest technological advancements in modern surgery."
-    ],
-    technologies: [
-      "Next.js",
-      "React",
-      "Tailwind CSS",
-      "Framer Motion",
-      "Advanced UI/UX"
-    ],
-  },
+{
+  title: "SSI STUDIOS",
+  image: "/images/ssistudios.png",
+  imageAlt: "SSI Studios Asset Automation Platform",
+  images: ["/images/ssistudios.png"],
+  url: "https://ssistudios.vercel.app",
+  github: "",
+  description: [
+    "Architected and developed SSI Studios, a full-stack internal platform that automates the creation, management, and distribution of digital assets such as certificates, ID cards, visiting cards, posters, and invitations.",
+    "Implemented a modular Next.js App Router architecture with scalable API routes, MongoDB data models, and optimized workflows for large-scale asset generation and batch operations.",
+    "Built automated generators and processing tools including certificate creation, visiting card and ID card rendering, background removal, PDF generation, and Excel import/export pipelines.",
+    "Engineered a real-time analytics dashboard to monitor certificate usage, system activity, and asset generation metrics with dynamic updates and performance tracking.",
+    "Integrated cloud services including AWS S3, Cloudinary, and SendGrid to enable scalable media storage, automated email distribution, and secure asset delivery.",
+    "Optimized platform performance by reducing network requests, implementing code splitting and tree-shaking, and improving UI responsiveness with a modular component architecture."
+  ],
+  technologies: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "MongoDB",
+    "AWS S3",
+    "Cloudinary",
+    "SendGrid",
+    "Tailwind CSS"
+  ],
+},
+{
+  title: "SMRSC 2026 Platform",
+  image: "/images/smrsc.png",
+  imageAlt: "SMRSC 2026 Global Robotic Surgery Conference Platform",
+  images: ["/images/smrsc.png"],
+  url: "https://www.ssinnovations.com/SMRSC_2026/home/",
+  github: "",
+  description: [
+    "Architected and developed the official web platform for SMRSC 2026, a global robotic surgery conference connecting surgeons, healthcare leaders, and innovators exploring the future of connected surgical care.",
+    "Built the platform using Next.js App Router with a full-stack architecture, integrating frontend UI and backend API routes within a single scalable application.",
+    "Implemented dynamic conference modules including schedules, faculty profiles, venue information, media content, and seamless event registration workflows.",
+    "Developed interactive UI experiences with Framer Motion, Lenis smooth scrolling, and responsive Tailwind components to deliver a high-performance, immersive conference website.",
+    "Integrated MongoDB and custom API routes to track visitor analytics and manage dynamic content across multiple sections of the platform."
+  ],
+  technologies: [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Framer Motion",
+    "MongoDB",
+    "Mongoose",
+    "Lenis"
+  ],
+},
   {
     title: "SSI CRS",
     image: "/images/ssicrs.png", 
