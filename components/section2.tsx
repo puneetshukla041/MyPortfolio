@@ -36,7 +36,7 @@ const timelineData: TimelineData[] = [
     logo: "/logos/ssi.jpeg",
     type: "Full-time",
     description: "Built scalable web platforms and internal automation tools for robotic surgery initiatives, focusing on high-performance interfaces, asset automation, and data-driven dashboards using modern full-stack technologies.",
-    points: ["Developed the SMRSC2026 global conference platform with dynamic animated interfaces for schedules, faculty profiles, media content, and seamless registration workflows.", "Built analytics dashboards and system monitoring tools to track certificate usage, user activity, and platform performance.", "Implemented integrations with AWS S3, Cloudinary, SendGrid, and Google Generative AI for storage, media processing, and automated email distribution."],
+    points: ["Developed the SMRSC2026 global conference platform with dynamic animated interfaces for schedules, faculty profiles, media content, and seamless registration workflows.", "Built the official SSICRS website (SS Innovations × Harvard collaboration) serving as the primary training and event registration hub for surgeons worldwide.", "Implemented integrations with AWS S3, Cloudinary, SendGrid, and Google Generative AI for storage, media processing, and automated email distribution."],
     tech: ["Next.js", "React", "S3", "SES","Typescript","System Design"],
   },
   {
