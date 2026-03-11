@@ -102,7 +102,7 @@ export const PROJECTS: Project[] = [
     image: "/images/medilens.png", 
     imageAlt: "MediLens Clinical Intelligence Dashboard showing medical imaging and speech biomarker data",
     images: ["/images/medilens.png"],
-    url: "https://ssiscrsweb.vercel.app",
+    url: "https://medilenss.vercel.app/",
     github: "",
 description: [
   "Built MediLens, a production-grade multimodal AI diagnostic platform that integrates retinal imaging, chest X-rays, ECG signals, speech biomarkers, dermatology analysis, and cognitive testing into a unified clinical dashboard.",
@@ -112,6 +112,20 @@ description: [
 ],
     technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "PyTorch"],
   },
+    {
+    title: "Black Hole Simulation",
+    image: "/images/blackhole.png", 
+    imageAlt: "Black Hole Simulation Visualization",
+    images: ["/images/blackhole.png"],
+    url: "https://blackhole-nu-red.vercel.app/",
+    github: "",
+description: [
+  "Developed a real-time, interactive WebGL simulation of Schwarzschild/Kerr black holes using General Relativistic Ray Marching and GLSL.",
+  "Implemented physically accurate gravitational lensing, volumetric accretion disks with Doppler beaming, and optimized adaptive step sizing for high-performance rendering.",
+],
+    technologies: ["Next.js", "WebGL", "GLSL", "TypeScript", "React"],
+  },
+
 ];
 
 // =====================================================
