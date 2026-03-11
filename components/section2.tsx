@@ -59,8 +59,8 @@ const timelineData: TimelineData[] = [
     location: "Gurugram, India",
     logo: "/logos/medanta.png",
     type: "Internship",
-    description: "Quality assurance and security compliance for mission-critical healthcare infrastructure.",
-    points: ["Executed API validation suites.", "Established strict version control.", "Security vulnerability assessments."],
+    description: "Performed manual quality assurance testing on healthcare web applications, validating user workflows and reporting defects to improve reliability and user experience.",
+    points: ["Conducted manual QA testing on Medanta’s website and patient registration modules, identifying functional issues, broken links, and UI inconsistencies.", "Security vulnerability assessments."],
     tech: ["Python", "QA Automation", "Security"],
   },
   {
