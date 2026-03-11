@@ -97,6 +97,21 @@ export const PROJECTS: Project[] = [
     ],
     technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
   },
+    {
+    title: "MediLens Clinical Intelligence Platform",
+    image: "/images/medilens.png", 
+    imageAlt: "MediLens Clinical Intelligence Dashboard showing medical imaging and speech biomarker data",
+    images: ["/images/medilens.png"],
+    url: "https://ssiscrsweb.vercel.app",
+    github: "",
+description: [
+  "Built MediLens, a production-grade multimodal AI diagnostic platform that integrates retinal imaging, chest X-rays, ECG signals, speech biomarkers, dermatology analysis, and cognitive testing into a unified clinical dashboard.",
+  "Developed a full-stack architecture using Next.js and FastAPI with modular AI pipelines enabling real-time medical analysis across multiple diagnostic modules with sub-3-second processing.",
+  "Implemented explainable AI capabilities including Grad-CAM visual heatmaps, biomarker breakdowns, and LLM-generated clinical explanations for transparent and interpretable diagnostics.",
+  "Integrated cloud services such as Amazon Polly for voice-based clinical summaries and built secure, scalable APIs with audit logging and real-time system monitoring for healthcare-grade reliability."
+],
+    technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
+  },
 ];
 
 // =====================================================
