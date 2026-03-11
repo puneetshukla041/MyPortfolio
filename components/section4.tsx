@@ -29,6 +29,17 @@ export interface Project {
 }
 
 // =====================================================
+// GLOBAL ANIMATION CONFIG
+// =====================================================
+
+const SPRING_TRANSITION = {
+  type: "spring",
+  stiffness: 85,
+  damping: 15,
+  mass: 0.8,
+};
+
+// =====================================================
 // PROJECTS DATA
 // =====================================================
 export const PROJECTS: Project[] = [
@@ -168,8 +179,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <motion.div
       layout
+      transition={SPRING_TRANSITION}
       onClick={onToggle}
-      className={`group cursor-pointer flex flex-col relative overflow-hidden rounded-2xl transition-all duration-500 bg-transparent backdrop-blur-none border-0 z-0
+      className={`group cursor-pointer flex flex-col relative overflow-hidden rounded-2xl bg-transparent backdrop-blur-none border-0 z-0 transition-shadow duration-500
         ${
           isExpanded
             ? "h-auto shadow-[0_0_80px_-20px_rgba(255,255,255,0.05)]"
@@ -204,13 +216,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       />
 
       {/* Premium Liquid Accents */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity z-40"></div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-foreground/50 to-transparent opacity-70 group-hover:opacity-100 transition-opacity duration-300 z-40"></div>
       <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.05] via-transparent to-transparent pointer-events-none z-30"></div>
 
       {/* Project Image Area with Progressive Mask */}
       <motion.div
         layout
-        className={`relative overflow-hidden transition-all duration-700 ease-in-out z-10
+        transition={SPRING_TRANSITION}
+        className={`relative overflow-hidden z-10
           ${isExpanded ? "h-[250px] sm:h-[400px] lg:h-[500px]" : "h-[200px] sm:h-[240px]"}`}
         style={{
           maskImage: "linear-gradient(to bottom, black 90%, transparent 100%)",
@@ -223,7 +236,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
             src={getImgSrc(images[isExpanded ? currentImageIndex : 0])}
             alt={project.imageAlt || `${project.title} screenshot`}
             className={`w-full h-full object-cover object-top transition-transform duration-700 ${
@@ -245,7 +258,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="absolute inset-y-0 left-0 flex items-center pl-2 sm:pl-4 z-40">
               <button
                 onClick={prevImage}
-                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground/20 hover:text-background"
               >
                 <FaChevronLeft className="text-xs sm:text-sm" />
               </button>
@@ -253,7 +266,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-4 z-40">
               <button
                 onClick={nextImage}
-                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-foreground/20 hover:text-background"
+                className="p-2 sm:p-3 rounded-full bg-background/40 backdrop-blur-md border border-foreground/10 text-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground/20 hover:text-background"
               >
                 <FaChevronRight className="text-xs sm:text-sm" />
               </button>
@@ -275,7 +288,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         )}
 
         {/* Softened overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-50 pointer-events-none" />
 
         {/* Action Icons Overlay */}
         <div className="absolute top-4 right-4 flex gap-2 z-20">
@@ -285,6 +298,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.2 }}
                 className="flex gap-2"
               >
                 {project.github && (
@@ -327,10 +341,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
         {/* Title Overlay for Expanded Card */}
         {isExpanded && (
-          <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 z-10">
+          <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 z-10 pointer-events-none">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
               className="space-y-1.5 sm:space-y-2"
             >
               <span className="text-foreground/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] bg-foreground/5 px-2.5 py-1 rounded-full border border-foreground/10 backdrop-blur-md inline-block mb-1 sm:mb-0">
@@ -347,6 +362,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {/* Card Content Area */}
       <motion.div
         layout
+        transition={SPRING_TRANSITION}
         className={`px-5 pb-6 pt-1 sm:px-8 sm:pb-8 sm:pt-2 flex-1 flex flex-col relative z-20 ${
           isExpanded ? "bg-foreground/[0.01]" : ""
         }`}
@@ -360,7 +376,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               {project.technologies.slice(0, 3).map((tech, i) => (
                 <span
                   key={i}
-                  className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-purple-300/80 group-hover:text-purple-300 transition-colors"
+                  className="text-[9px] sm:text-[10px] uppercase tracking-wider font-bold text-purple-300/80 group-hover:text-purple-300 transition-colors duration-300"
                 >
                   {tech}
                   {i < 2 ? " •" : ""}
@@ -376,7 +392,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               key="expanded"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="w-full space-y-8 mt-4 sm:mt-6"
             >
               {/* Organized Info Grid */}
@@ -394,7 +411,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                     {Array.isArray(project.description) ? (
                       project.description.map((point, i) => (
                         <div key={i} className="flex gap-3 sm:gap-4 group/item">
-                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/30 group-hover/item:bg-foreground/60 transition-colors shrink-0" />
+                          <div className="mt-2 h-1.5 w-1.5 rounded-full bg-foreground/30 group-hover/item:bg-foreground/60 transition-colors duration-300 shrink-0" />
                           <p className="text-sm sm:text-base leading-relaxed text-foreground/80 font-light">
                             {point}
                           </p>
@@ -419,7 +436,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                         {project.technologies.map((tech, i) => (
                           <span
                             key={i}
-                            className="text-[9px] sm:text-[10px] font-bold text-foreground/80 bg-foreground/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-colors cursor-default"
+                            className="text-[9px] sm:text-[10px] font-bold text-foreground/80 bg-foreground/5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-foreground/10 hover:bg-foreground/10 transition-colors duration-300 cursor-default"
                           >
                             {tech}
                           </span>
@@ -433,7 +450,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                           href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all border border-foreground/10"
+                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-foreground/5 hover:bg-foreground/10 transition-all duration-300 border border-foreground/10"
                         >
                           <div className="flex items-center gap-3">
                             <FaGithub className="text-lg sm:text-xl text-foreground/70 group-hover/btn:text-foreground transition-colors" />
@@ -452,7 +469,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                           href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-indigo-500/5 hover:bg-indigo-500/15 transition-all border border-indigo-500/20"
+                          className="group/btn flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl bg-indigo-500/5 hover:bg-indigo-500/15 transition-all duration-300 border border-indigo-500/20"
                         >
                           <div className="flex items-center gap-3">
                             <FiGlobe className="text-base sm:text-lg text-indigo-400/70 group-hover/btn:text-indigo-400 transition-colors" />
@@ -478,10 +495,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 }}
                 className="mt-6 sm:mt-8 pt-4 border-t border-foreground/5 flex items-center justify-between cursor-pointer group/close"
               >
-                <span className="text-[9px] sm:text-[10px] font-bold text-foreground/50 uppercase tracking-widest group-hover/close:text-foreground transition-colors">
+                <span className="text-[9px] sm:text-[10px] font-bold text-foreground/50 uppercase tracking-widest group-hover/close:text-foreground transition-colors duration-300">
                   Collapse Project
                 </span>
-                <div className="p-2 rounded-full bg-foreground/5 group-hover/close:bg-foreground/10 transition-colors">
+                <div className="p-2 rounded-full bg-foreground/5 group-hover/close:bg-foreground/10 transition-colors duration-300">
                   <FaChevronUp className="text-foreground/60 group-hover/close:text-foreground group-hover/close:-translate-y-0.5 transition-all text-[10px] sm:text-xs" />
                 </div>
               </div>
@@ -491,6 +508,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               key="collapsed"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               className="space-y-4 flex-1 flex flex-col justify-between"
             >
               <p className="line-clamp-3 text-xs sm:text-sm text-foreground/60 font-light leading-relaxed">
@@ -500,7 +519,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               </p>
 
               <div className="pt-4 border-t border-foreground/5 flex items-center justify-between pointer-events-none mt-auto">
-                <span className="text-[8px] sm:text-[9px] font-bold text-foreground/50 uppercase tracking-[0.2em] group-hover:text-foreground transition-colors">
+                <span className="text-[8px] sm:text-[9px] font-bold text-foreground/50 uppercase tracking-[0.2em] group-hover:text-foreground transition-colors duration-300">
                   Explore Project
                 </span>
                 <FaChevronDown className="text-foreground/40 group-hover:text-foreground group-hover:translate-y-0.5 transition-all text-[8px] sm:text-[9px]" />
@@ -519,11 +538,12 @@ const Projects: React.FC = () => {
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id);
     if (expandedId !== id) {
+      // Increased timeout slightly so the scroll triggers right as the layout finishes expanding
       setTimeout(() => {
         document
           .getElementById(`project-${id}`)
           ?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 350);
+      }, 450); 
     }
   };
 
@@ -546,6 +566,7 @@ const Projects: React.FC = () => {
         {/* --- GRID --- */}
         <motion.div 
           layout 
+          transition={SPRING_TRANSITION}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 auto-rows-min"
         >
           {PROJECTS.map((project, index) => {
@@ -553,14 +574,10 @@ const Projects: React.FC = () => {
             return (
               <motion.div
                 layout
+                transition={SPRING_TRANSITION}
                 id={`project-${index}`}
                 key={`${project.title}-${index}`}
-                className={`transition-all duration-300 ease-out 
-                  ${
-                    isExpanded
-                      ? "col-span-1 md:col-span-2 lg:col-span-2 z-10"
-                      : "col-span-1 z-0"
-                  }`}
+                className={isExpanded ? "col-span-1 md:col-span-2 lg:col-span-2 z-10" : "col-span-1 z-0"}
               >
                 <ProjectCard
                   project={project}
