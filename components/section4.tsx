@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
       "Lenis"
     ],
   },
-  
+
   {
     title: "SSI CRS",
     image: "/images/ssicrs.png", 
@@ -98,6 +98,7 @@ export const PROJECTS: Project[] = [
     ],
     technologies: ["Next.js", "React", "Tailwind CSS", "Healthcare Tech"],
   },
+
   {
     title: "MediLens Clinical Intelligence Platform",
     image: "/images/medilens.png", 
@@ -113,6 +114,7 @@ export const PROJECTS: Project[] = [
     ],
     technologies: ["Next.js", "TypeScript", "FastAPI", "PostgreSQL", "PyTorch"],
   },
+  
   {
     title: "Black Hole Simulation",
     image: "/images/blackhole.png", 
