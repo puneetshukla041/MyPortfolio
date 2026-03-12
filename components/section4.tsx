@@ -83,6 +83,7 @@ export const PROJECTS: Project[] = [
       "Lenis"
     ],
   },
+  
   {
     title: "SSI CRS",
     image: "/images/ssicrs.png", 
