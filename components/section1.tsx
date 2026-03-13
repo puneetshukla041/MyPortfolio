@@ -245,7 +245,7 @@ const Section1 = () => {
 
   const handleDeploymentAction = () => {
     const link = document.createElement('a');
-    link.href = '/Puneet Shukla Resume.pdf';
+    link.href = '/Puneet_Shukla_Resume.pdf';
     link.download = 'Puneet_Shukla_Resume.pdf';
     document.body.appendChild(link);
     link.click();
