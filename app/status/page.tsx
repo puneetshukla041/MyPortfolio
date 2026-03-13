@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LuSearch, LuPlus, LuFilter, LuDownload, 
-  LuPen, LuTrash2, LuChevronLeft, LuChevronRight, LuLock, LuBriefcase, LuMapPin, LuDollarSign, LuCalendarClock, LuFilePlus, LuX, LuUser, LuPhone
+  LuPen, LuTrash2, LuChevronLeft, LuChevronRight, LuLock, 
+  LuBriefcase, LuMapPin, LuDollarSign, LuCalendarClock, 
+  LuX, LuUser, LuPhone, LuLinkedin // <-- Imported LuLinkedin
 } from 'react-icons/lu';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -28,6 +30,7 @@ type InterviewType = {
   workMode: string;
   hrName: string;
   phoneNumber: string;
+  linkedin: string; // <-- Added to Type
   status: string;
   priority: string;
   rounds: RoundType[];
@@ -103,7 +106,7 @@ export default function StatusPage() {
   
   const initialFormState: InterviewType = {
     companyName: '', role: '', ctc: '', location: '', workMode: 'Remote',
-    hrName: '', phoneNumber: '', status: 'Applied', priority: 'Medium',
+    hrName: '', phoneNumber: '', linkedin: '', status: 'Applied', priority: 'Medium',
     rounds: []
   };
   const [formData, setFormData] = useState<InterviewType>(initialFormState);
@@ -138,44 +141,83 @@ export default function StatusPage() {
       setLoading(false);
     }
   };
-
-  const handleExportPDF = () => {
+const handleExportPDF = () => {
     const doc = new jsPDF('landscape');
     doc.setFontSize(16);
-    doc.text('Advanced Application Pipeline', 14, 20);
+    doc.text('Advanced Application Pipeline - Full Report', 14, 20);
     doc.setFontSize(10);
     doc.setTextColor(100);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 26);
 
-    const tableColumn = ["Company", "Role & Details", "CTC", "Latest Round", "Overall Status"];
+    // 1. Define expanded, comprehensive columns
+    const tableColumn = [
+      "Company & Role", 
+      "Job Details", 
+      "Recruiter Info", 
+      "Pipeline Status", 
+      "Rounds History"
+    ];
+    
     const tableRows: string[][] = [];
 
     interviews.forEach(interview => {
-      const latestRound = interview.rounds && interview.rounds.length > 0 
-        ? `${interview.rounds[interview.rounds.length - 1].roundName} (${interview.rounds[interview.rounds.length - 1].status})` 
-        : 'No rounds yet';
+      // 2. Map all rounds into a single formatted string
+      let roundsText = 'No rounds logged';
+      if (interview.rounds && interview.rounds.length > 0) {
+        roundsText = interview.rounds.map((r, index) => {
+          const dateStr = r.interviewDate ? ` (${r.interviewDate})` : '';
+          const notesStr = r.notes ? `\n   ↳ Notes: ${r.notes}` : '';
+          return `${index + 1}. ${r.roundName} - ${r.status}${dateStr}${notesStr}`;
+        }).join('\n\n'); // Double line break between rounds for readability
+      }
 
+      // 3. Format Recruiter Info
+      const hrInfo = [
+        `Name: ${interview.hrName || 'N/A'}`,
+        `Phone: ${interview.phoneNumber || 'N/A'}`,
+        `LinkedIn: ${interview.linkedin || 'N/A'}`
+      ].join('\n');
+
+      // 4. Populate the row with ALL data
       const rowData = [
-        interview.companyName || 'Unnamed',
-        `${interview.role || 'Any Role'}\n${interview.workMode} | ${interview.location || 'N/A'}`,
-        interview.ctc || 'Not Disclosed',
-        latestRound,
-        interview.status
+        `${interview.companyName || 'Unnamed'}\n${interview.role || 'Any Role'}`,
+        `CTC: ${interview.ctc || 'N/A'}\nMode: ${interview.workMode}\nLoc: ${interview.location || 'N/A'}`,
+        hrInfo,
+        `Status: ${interview.status}\nPriority: ${interview.priority}`,
+        roundsText
       ];
+      
       tableRows.push(rowData);
     });
 
+    // 5. Generate the table with updated styling for dense data
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
       startY: 32,
       theme: 'grid',
-      styles: { fontSize: 9, cellPadding: 3 },
-      headStyles: { fillColor: [0, 122, 255], textColor: 255 },
-      alternateRowStyles: { fillColor: [245, 245, 247] }
+      styles: { 
+        fontSize: 8, 
+        cellPadding: 4, 
+        overflow: 'linebreak', // Crucial for multiline text
+        valign: 'top'
+      }, 
+      headStyles: { 
+        fillColor: [0, 122, 255], 
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      columnStyles: {
+          0: { cellWidth: 40 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 50 },
+          3: { cellWidth: 35 },
+          4: { cellWidth: 'auto' } // Let rounds history absorb the remaining width
+      },
+      alternateRowStyles: { fillColor: [248, 248, 250] } // Subtle apple-like alternating row color
     });
 
-    doc.save(`Pipeline_Export_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`Pipeline_Full_Export_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -388,8 +430,9 @@ export default function StatusPage() {
                   <tr>
                     <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Role & Company</th>
                     <th className="px-4 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Details (CTC & Loc)</th>
+                    <th className="px-4 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Recruiter Info</th>
                     <th className="px-4 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Progress (Rounds)</th>
-                    <th className="px-4 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Overall Status</th>
+                    <th className="px-4 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40">Status</th>
                     <th className="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-zinc-400 border-b border-white/40 text-right">Actions</th>
                   </tr>
                 </thead>
@@ -409,6 +452,24 @@ export default function StatusPage() {
                             <div className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-600"><LuDollarSign className="w-3.5 h-3.5 text-zinc-400"/> {interview.ctc || 'N/A'}</div>
                             <div className="flex items-center gap-1.5 text-[13px] font-medium text-zinc-600"><LuMapPin className="w-3.5 h-3.5 text-zinc-400"/> {interview.location || 'N/A'} <span className="text-zinc-400 text-[11px]">({interview.workMode})</span></div>
                          </div>
+                      </td>
+
+                      {/* NEW: Recruiter Info Column in Table */}
+                      <td className="block md:table-cell p-5 md:px-4 md:py-6 border-b border-white/40 md:border-0">
+                        <div className="flex flex-col items-start">
+                          <div className="text-[14px] font-bold text-zinc-800">{interview.hrName || 'Not specified'}</div>
+                          <div className="text-[12px] text-zinc-500 font-medium mt-0.5">{interview.phoneNumber || 'No contact info'}</div>
+                          {interview.linkedin && (
+                            <a 
+                              href={interview.linkedin.startsWith('http') ? interview.linkedin : `https://${interview.linkedin}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="inline-flex items-center gap-1.5 text-[#007AFF] hover:bg-[#007AFF]/10 px-2 py-1 rounded-md transition-colors text-[11px] font-bold mt-1.5 -ml-2"
+                            >
+                              <LuLinkedin className="w-3.5 h-3.5" /> View Profile
+                            </a>
+                          )}
+                        </div>
                       </td>
 
                       <td className="block md:table-cell p-5 md:px-4 md:py-6 border-b border-white/40 md:border-0">
@@ -500,10 +561,11 @@ export default function StatusPage() {
                       <InputField label="Work Mode" type="select" value={formData.workMode} onChange={e => setFormData({...formData, workMode: e.target.value})} options={[{ value: 'Remote', label: 'Remote' }, { value: 'Hybrid', label: 'Hybrid' }, { value: 'On-site', label: 'On-site' }]} />
                     </div>
                     
-                    {/* NEW: Recruiter Details Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* NEW: 3-Column Recruiter Details Row including LinkedIn */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <InputField label="Recruiter Name" placeholder="e.g. Jane Doe" value={formData.hrName} onChange={e => setFormData({...formData, hrName: e.target.value})} icon={LuUser} />
-                      <InputField label="Contact Number / Email" placeholder="e.g. +1 234 567 8900 or jane@company.com" value={formData.phoneNumber} onChange={e => setFormData({...formData, phoneNumber: e.target.value})} icon={LuPhone} />
+                      <InputField label="Contact Info" placeholder="Phone or Email" value={formData.phoneNumber} onChange={e => setFormData({...formData, phoneNumber: e.target.value})} icon={LuPhone} />
+                      <InputField label="LinkedIn Profile" placeholder="https://linkedin.com/in/..." value={formData.linkedin} onChange={e => setFormData({...formData, linkedin: e.target.value})} icon={LuLinkedin} />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

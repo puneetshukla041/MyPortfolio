@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 const RoundSchema = new mongoose.Schema({
-  roundName: { type: String }, // Removed required
+  roundName: { type: String }, 
   interviewDate: { type: Date },
   status: { 
     type: String, 
@@ -13,13 +13,14 @@ const RoundSchema = new mongoose.Schema({
 });
 
 const InterviewSchema = new mongoose.Schema({
-  companyName: { type: String }, // Removed required
-  role: { type: String }, // Removed required
+  companyName: { type: String }, 
+  role: { type: String }, 
   ctc: { type: String },
   location: { type: String }, 
   workMode: { type: String, enum: ['Remote', 'Hybrid', 'On-site', 'Flexible'], default: 'Remote' },
   hrName: { type: String },
   phoneNumber: { type: String },
+  linkedin: { type: String }, // <-- NEW: Added LinkedIn field
   
   status: { 
     type: String, 
