@@ -10,6 +10,7 @@ type InterviewType = {
   hrName: string;
   phoneNumber: string;
   role: string;
+  location: string; // <-- Added Location
   experienceRequired: string;
   interviewDate: string;
   status: string;
@@ -22,11 +23,12 @@ const ACCESS_PIN = "765534"; // Your defined PIN
 
 // --- Premium Apple Glass Input Component ---
 const InputField = ({ 
-  label, placeholder, value, onChange, type = 'text', required = false 
+  label, placeholder, value, onChange, type = 'text', required = false, options = [] 
 }: { 
-  label: string, placeholder: string, value: string, 
+  label: string, placeholder?: string, value: string, 
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void, 
-  type?: string, required?: boolean 
+  type?: string, required?: boolean,
+  options?: { value: string, label: string }[] // <-- Added dynamic options support
 }) => (
   <div className="space-y-1.5 group w-full">
     <label className="text-[11px] font-bold text-zinc-500 uppercase tracking-widest pl-2 flex items-center gap-1.5 group-focus-within:text-blue-500 transition-colors duration-300">
@@ -48,9 +50,10 @@ const InputField = ({
           required={required}
           className="block w-full rounded-[1.2rem] border border-white/60 bg-white/40 backdrop-blur-md py-3.5 px-5 text-zinc-900 focus:border-blue-500 focus:bg-white/80 focus:ring-[3px] focus:ring-blue-500/20 sm:text-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-300 ease-out hover:bg-white/60 cursor-pointer appearance-none outline-none font-medium"
         >
-          <option value="High">High Priority</option>
-          <option value="Medium">Medium Priority</option>
-          <option value="Low">Low Priority</option>
+          {/* Dynamic options mapping */}
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
         </select>
       ) : (
         <input
@@ -93,7 +96,7 @@ export default function StatusPage() {
   const [currentPage, setCurrentPage] = useState(1);
   
   const initialFormState = {
-    companyName: '', hrName: '', phoneNumber: '', role: '',
+    companyName: '', hrName: '', phoneNumber: '', role: '', location: '',
     experienceRequired: '', interviewDate: '', status: 'Scheduled',
     topicsToStudy: '', priority: 'Medium'
   };
@@ -101,7 +104,6 @@ export default function StatusPage() {
 
   // --- Auth & Data Effects ---
   useEffect(() => {
-    // Check if the user is already authenticated
     const hasAccess = localStorage.getItem('dashboard_access_granted');
     if (hasAccess === 'true') {
       setIsAuthenticated(true);
@@ -457,22 +459,31 @@ export default function StatusPage() {
                               <span className="inline-flex px-3.5 py-1.5 rounded-full text-[11px] font-bold border border-[#007AFF]/20 bg-[#007AFF]/10 text-[#007AFF] uppercase tracking-wider">
                                 {interview.companyName}
                               </span>
-                              <div className="text-[14px] text-zinc-600 font-semibold mt-2">{interview.role || 'Role unassigned'}</div>
+                              <div className="text-[14px] text-zinc-600 font-semibold mt-2">
+                                {interview.role || 'Role unassigned'}
+                                {interview.location && <span className="text-zinc-400 font-medium"> • {interview.location}</span>}
+                              </div>
                             </div>
                           </td>
 
                           <td className="flex md:table-cell flex-col md:flex-row items-start md:items-center justify-between p-5 md:px-4 md:py-6 border-b border-white/40 md:border-0">
                             <MobileLabel>Status</MobileLabel>
                             <div className="w-full md:w-auto text-right md:text-left mt-1 md:mt-0 cursor-pointer">
-                              <div className="text-[14px] text-zinc-800 font-bold mb-2">
-                                {interview.interviewDate ? new Date(interview.interviewDate).toLocaleDateString('en-GB').replace(/\//g, '.') : 'TBD'}
+                              <div className="text-[14px] text-zinc-800 font-bold mb-2 flex items-center gap-2 md:justify-start justify-end">
+                                <span className={`w-2 h-2 rounded-full ${
+                                  interview.status === 'Completed' ? 'bg-green-500' :
+                                  interview.status === 'Offered' ? 'bg-blue-500' :
+                                  interview.status === 'Rejected' ? 'bg-red-500' :
+                                  'bg-orange-400'
+                                }`}></span>
+                                {interview.status}
                               </div>
                               <span className={`inline-flex px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest ${
                                 interview.priority === 'High' ? 'bg-[#FF3B30]/10 text-[#FF3B30]' :
                                 interview.priority === 'Medium' ? 'bg-[#FF9500]/10 text-[#FF9500]' :
                                 'bg-zinc-200/50 text-zinc-600'
                               }`}>
-                                {interview.priority}
+                                {interview.priority} Priority
                               </span>
                             </div>
                           </td>
@@ -582,6 +593,7 @@ export default function StatusPage() {
               {/* Form Body */}
               <div className="px-8 pt-8 pb-10 overflow-y-auto custom-scrollbar flex-1">
                 <form id="interview-form" onSubmit={handleSubmit} className="space-y-6">
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField label="Company Name" placeholder="Apple" required value={formData.companyName} onChange={e => setFormData({...formData, companyName: e.target.value})} />
                     <InputField label="Role" placeholder="Engineer" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} />
@@ -589,12 +601,39 @@ export default function StatusPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField label="Date" placeholder="" type="date" value={formData.interviewDate} onChange={e => setFormData({...formData, interviewDate: e.target.value})} />
-                    <InputField label="Priority" placeholder="" type="select" value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} />
+                    <InputField label="Location" placeholder="Remote / London / NY" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <InputField label="HR Contact" placeholder="Name" value={formData.hrName} onChange={e => setFormData({...formData, hrName: e.target.value})} />
                     <InputField label="Phone" placeholder="Number" value={formData.phoneNumber} onChange={e => setFormData({...formData, phoneNumber: e.target.value})} />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <InputField 
+                      label="Status" 
+                      type="select" 
+                      value={formData.status} 
+                      onChange={e => setFormData({...formData, status: e.target.value})}
+                      options={[
+                        { value: 'Scheduled', label: 'Scheduled' },
+                        { value: 'Completed', label: 'Completed' },
+                        { value: 'Awaiting Feedback', label: 'Awaiting Feedback' },
+                        { value: 'Offered', label: 'Offered' },
+                        { value: 'Rejected', label: 'Rejected' }
+                      ]}
+                    />
+                    <InputField 
+                      label="Priority" 
+                      type="select" 
+                      value={formData.priority} 
+                      onChange={e => setFormData({...formData, priority: e.target.value})} 
+                      options={[
+                        { value: 'High', label: 'High Priority' },
+                        { value: 'Medium', label: 'Medium Priority' },
+                        { value: 'Low', label: 'Low Priority' }
+                      ]}
+                    />
                   </div>
 
                   <div className="w-full">

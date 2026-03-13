@@ -6,6 +6,7 @@ const InterviewSchema = new mongoose.Schema({
   hrName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   role: { type: String, required: true },
+  location: { type: String }, // <-- NEW
   experienceRequired: { type: String },
   interviewDate: { type: Date, required: true },
   status: { 
