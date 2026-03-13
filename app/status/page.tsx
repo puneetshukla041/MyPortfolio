@@ -18,6 +18,7 @@ type InterviewType = {
 };
 
 const PAGE_LIMIT = 10;
+const ACCESS_PIN = "765534"; // Your defined PIN
 
 // --- Premium Apple Glass Input Component ---
 const InputField = ({ 
@@ -73,6 +74,13 @@ const MobileLabel = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function StatusPage() {
+  // --- Auth State ---
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState(false);
+
+  // --- App State ---
   const [interviews, setInterviews] = useState<InterviewType[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -91,9 +99,28 @@ export default function StatusPage() {
   };
   const [formData, setFormData] = useState<InterviewType>(initialFormState);
 
+  // --- Auth & Data Effects ---
   useEffect(() => {
+    // Check if the user is already authenticated
+    const hasAccess = localStorage.getItem('dashboard_access_granted');
+    if (hasAccess === 'true') {
+      setIsAuthenticated(true);
+    }
+    setAuthLoading(false);
     fetchInterviews();
   }, []);
+
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pinInput === ACCESS_PIN) {
+      localStorage.setItem('dashboard_access_granted', 'true');
+      setIsAuthenticated(true);
+      setPinError(false);
+    } else {
+      setPinError(true);
+      setPinInput('');
+    }
+  };
 
   const fetchInterviews = async () => {
     try {
@@ -196,10 +223,72 @@ export default function StatusPage() {
   const highPriority = interviews.filter(i => i.priority === 'High').length;
   const offers = interviews.filter(i => i.status === 'Offered').length;
 
+  // --- Renders ---
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
+        <div className="text-zinc-400 font-bold tracking-widest uppercase text-sm animate-pulse">Checking Access...</div>
+      </div>
+    );
+  }
+
+  // Auth Overlay Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="relative min-h-screen bg-[#F5F5F7] flex items-center justify-center p-4 overflow-hidden selection:bg-blue-200">
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute top-[-10%] left-[-5%] w-[50vw] h-[50vw] rounded-full bg-blue-300/20 blur-[120px] mix-blend-multiply" />
+          <div className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-purple-300/20 blur-[120px] mix-blend-multiply" />
+        </div>
+
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="relative z-10 w-full max-w-sm bg-white/60 backdrop-blur-3xl rounded-[2.5rem] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.04)] border border-white/60 text-center"
+        >
+          <div className="w-16 h-16 bg-zinc-900 rounded-full mx-auto flex items-center justify-center mb-6 shadow-xl">
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-zinc-900 tracking-tight mb-2">Restricted Access</h2>
+          <p className="text-[13px] text-zinc-500 font-medium mb-8">Please enter the PIN to view your dashboard.</p>
+          
+          <form onSubmit={handlePinSubmit} className="space-y-4">
+            <div>
+              <input 
+                type="password" 
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                placeholder="Enter PIN"
+                className={`block w-full text-center tracking-[0.5em] text-lg rounded-[1.2rem] border ${pinError ? 'border-red-500/50 focus:border-red-500/50 bg-red-50/50' : 'border-white/60 focus:border-blue-500'} bg-white/50 backdrop-blur-md py-4 px-5 text-zinc-900 placeholder:text-zinc-400 placeholder:tracking-normal focus:bg-white/80 focus:ring-[3px] focus:ring-blue-500/20 shadow-[0_4px_12px_rgba(0,0,0,0.03)] transition-all outline-none`}
+                autoFocus
+              />
+              {pinError && (
+                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-[11px] font-bold tracking-wider uppercase mt-2">
+                  Incorrect PIN
+                </motion.p>
+              )}
+            </div>
+            <motion.button 
+              whileTap={{ scale: 0.96 }}
+              type="submit"
+              className="w-full py-4 text-[15px] font-bold text-white bg-zinc-900 rounded-[1.2rem] shadow-lg hover:bg-black transition-all cursor-pointer mt-2"
+            >
+              Unlock Dashboard
+            </motion.button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Main Dashboard View
   if (loading) {
     return (
       <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center">
-        <div className="text-zinc-400 font-bold tracking-widest uppercase text-sm">Loading System...</div>
+        <div className="text-zinc-400 font-bold tracking-widest uppercase text-sm animate-pulse">Loading System...</div>
       </div>
     );
   }
