@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LuSearch, LuPlus, LuFilter, LuDownload, 
-  LuPen, LuTrash2, LuChevronLeft, LuChevronRight, LuLock, LuBriefcase, LuMapPin, LuDollarSign, LuCalendarClock, LuBellPlus, LuX
+  LuPen, LuTrash2, LuChevronLeft, LuChevronRight, LuLock, LuBriefcase, LuMapPin, LuDollarSign, LuCalendarClock, LuFilePlus, LuX, LuUser, LuPhone
 } from 'react-icons/lu';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { LucidePlusCircle } from 'lucide-react';
 
 // --- Advanced Types ---
 type RoundType = {
@@ -155,8 +156,8 @@ export default function StatusPage() {
         : 'No rounds yet';
 
       const rowData = [
-        interview.companyName,
-        `${interview.role}\n${interview.workMode} | ${interview.location || 'N/A'}`,
+        interview.companyName || 'Unnamed',
+        `${interview.role || 'Any Role'}\n${interview.workMode} | ${interview.location || 'N/A'}`,
         interview.ctc || 'Not Disclosed',
         latestRound,
         interview.status
@@ -211,7 +212,6 @@ export default function StatusPage() {
   };
 
   const handleEdit = (interview: InterviewType) => {
-    // Format dates for the round inputs
     const formattedRounds = (interview.rounds || []).map(r => ({
       ...r,
       interviewDate: r.interviewDate ? new Date(r.interviewDate).toISOString().split('T')[0] : ''
@@ -243,7 +243,6 @@ export default function StatusPage() {
     setShowForm(true);
   };
 
-  // --- Dynamic Rounds Handlers ---
   const addRound = () => {
     setFormData(prev => ({
       ...prev,
@@ -267,8 +266,8 @@ export default function StatusPage() {
   };
 
   const filteredInterviews = interviews.filter(i => 
-    i.companyName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    i.role.toLowerCase().includes(searchQuery.toLowerCase())
+    (i.companyName || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (i.role || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
   
   const totalItems = filteredInterviews.length;
@@ -400,8 +399,8 @@ export default function StatusPage() {
                       
                       <td className="block md:table-cell p-5 md:px-8 md:py-6 border-b border-white/40 md:border-0">
                         <div className="flex flex-col">
-                          <span className="text-[16px] font-bold text-zinc-900">{interview.role}</span>
-                          <span className="text-[13px] font-semibold text-[#007AFF] mt-1 uppercase tracking-wider">{interview.companyName}</span>
+                          <span className="text-[16px] font-bold text-zinc-900">{interview.role || 'Role unassigned'}</span>
+                          <span className="text-[13px] font-semibold text-[#007AFF] mt-1 uppercase tracking-wider">{interview.companyName || 'Unnamed Company'}</span>
                         </div>
                       </td>
 
@@ -419,7 +418,7 @@ export default function StatusPage() {
                           </div>
                           {interview.rounds?.length > 0 && (
                             <div className="text-[12px] text-zinc-500 font-medium mt-1 bg-white/50 inline-flex px-2 py-1 rounded border border-white/60 w-max">
-                              Latest: {interview.rounds[interview.rounds.length - 1].roundName} 
+                              Latest: {interview.rounds[interview.rounds.length - 1].roundName || 'Unnamed Round'} 
                               <span className="text-zinc-400 ml-1">({interview.rounds[interview.rounds.length - 1].status})</span>
                             </div>
                           )}
@@ -492,14 +491,21 @@ export default function StatusPage() {
                   <div className="space-y-6">
                     <h3 className="text-[12px] font-bold text-zinc-800 uppercase tracking-widest border-b border-zinc-200 pb-2">1. Company & Role</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <InputField label="Company Name" placeholder="e.g. Google, Stripe" required value={formData.companyName} onChange={e => setFormData({...formData, companyName: e.target.value})} icon={LuBriefcase}/>
-                      <InputField label="Role Applied For" placeholder="e.g. Senior Frontend Engineer" required value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} />
+                      <InputField label="Company Name" placeholder="e.g. Google, Stripe" value={formData.companyName} onChange={e => setFormData({...formData, companyName: e.target.value})} icon={LuBriefcase}/>
+                      <InputField label="Role Applied For" placeholder="e.g. Senior Frontend Engineer" value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <InputField label="Target CTC" placeholder="e.g. 40 LPA or $150k" value={formData.ctc} onChange={e => setFormData({...formData, ctc: e.target.value})} icon={LuDollarSign} />
                       <InputField label="Location" placeholder="e.g. London / Bangalore" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} icon={LuMapPin} />
                       <InputField label="Work Mode" type="select" value={formData.workMode} onChange={e => setFormData({...formData, workMode: e.target.value})} options={[{ value: 'Remote', label: 'Remote' }, { value: 'Hybrid', label: 'Hybrid' }, { value: 'On-site', label: 'On-site' }]} />
                     </div>
+                    
+                    {/* NEW: Recruiter Details Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <InputField label="Recruiter Name" placeholder="e.g. Jane Doe" value={formData.hrName} onChange={e => setFormData({...formData, hrName: e.target.value})} icon={LuUser} />
+                      <InputField label="Contact Number / Email" placeholder="e.g. +1 234 567 8900 or jane@company.com" value={formData.phoneNumber} onChange={e => setFormData({...formData, phoneNumber: e.target.value})} icon={LuPhone} />
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <InputField label="Overall Status" type="select" value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} options={[{ value: 'Applied', label: 'Applied' }, { value: 'In Progress', label: 'In Progress' }, { value: 'Offered', label: 'Offered' }, { value: 'Rejected', label: 'Rejected' }, { value: 'Ghosted', label: 'Ghosted' }]} />
                       <InputField label="Priority" type="select" value={formData.priority} onChange={e => setFormData({...formData, priority: e.target.value})} options={[{ value: 'High', label: 'High Priority' }, { value: 'Medium', label: 'Medium Priority' }, { value: 'Low', label: 'Low Priority' }]} />
@@ -510,7 +516,7 @@ export default function StatusPage() {
                   <div className="space-y-6">
                     <div className="flex items-center justify-between border-b border-zinc-200 pb-2">
                       <h3 className="text-[12px] font-bold text-zinc-800 uppercase tracking-widest">2. Interview Rounds Tracker</h3>
-                      <button type="button" onClick={addRound} className="text-[12px] font-bold text-[#007AFF] flex items-center gap-1.5 hover:underline cursor-pointer"><LuPlus className="w-4 h-4"/> Add Round</button>
+                      <button type="button" onClick={addRound} className="text-[12px] font-bold text-[#007AFF] flex items-center gap-1.5 hover:underline cursor-pointer"><LucidePlusCircle className="w-4 h-4"/> Add Round</button>
                     </div>
 
                     {formData.rounds.length === 0 ? (
@@ -525,7 +531,7 @@ export default function StatusPage() {
                             <div className="absolute top-6 right-6 text-zinc-300 font-bold text-2xl opacity-20 select-none pointer-events-none">#{idx + 1}</div>
                             
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5 relative z-10">
-                              <InputField label="Round Name" placeholder="e.g. Technical Screen" value={round.roundName} onChange={(e) => updateRound(idx, 'roundName', e.target.value)} required />
+                              <InputField label="Round Name" placeholder="e.g. Technical Screen" value={round.roundName} onChange={(e) => updateRound(idx, 'roundName', e.target.value)} />
                               <InputField label="Date" type="date" value={round.interviewDate} onChange={(e) => updateRound(idx, 'interviewDate', e.target.value)} icon={LuCalendarClock} />
                               <InputField label="Round Status" type="select" value={round.status} onChange={(e) => updateRound(idx, 'status', e.target.value)} options={[{ value: 'Scheduled', label: 'Scheduled' }, { value: 'Completed', label: 'Completed' }, { value: 'Passed', label: 'Passed' }, { value: 'Rejected', label: 'Rejected' }]} />
                             </div>

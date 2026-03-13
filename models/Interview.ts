@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 const RoundSchema = new mongoose.Schema({
-  roundName: { type: String, required: true }, // e.g., "Technical", "HR", "System Design"
+  roundName: { type: String }, // Removed required
   interviewDate: { type: Date },
   status: { 
     type: String, 
@@ -13,15 +13,14 @@ const RoundSchema = new mongoose.Schema({
 });
 
 const InterviewSchema = new mongoose.Schema({
-  companyName: { type: String, required: true },
-  role: { type: String, required: true },
-  ctc: { type: String }, // e.g., "30 LPA", "150k USD"
+  companyName: { type: String }, // Removed required
+  role: { type: String }, // Removed required
+  ctc: { type: String },
   location: { type: String }, 
   workMode: { type: String, enum: ['Remote', 'Hybrid', 'On-site', 'Flexible'], default: 'Remote' },
   hrName: { type: String },
   phoneNumber: { type: String },
   
-  // Overall status of the application
   status: { 
     type: String, 
     enum: ['Applied', 'In Progress', 'Offered', 'Rejected', 'Ghosted'], 
@@ -33,7 +32,6 @@ const InterviewSchema = new mongoose.Schema({
     default: 'Medium' 
   },
   
-  // Array to hold multiple rounds
   rounds: [RoundSchema]
 }, { timestamps: true });
 
