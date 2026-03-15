@@ -4,50 +4,33 @@ import { useState } from "react";
 export default function CodeCardPage() {
   const [copied, setCopied] = useState(false);
 
-  // This is the string representation of your code to be displayed/copied
   const codeString = `"use client";
 import { useState } from "react";
 
-export default function TodoApp() {
-  const [todos, setTodos] = useState<{ id: number; text: string }[]>([]);
-  const [input, setInput] = useState("");
+export default function Todo() {
+  const [t, setT] = useState<string[]>([]);
+  const [i, setI] = useState("");
 
-  const add = () => {
-    if (!input.trim()) return;
-    setTodos([...todos, { id: Date.now(), text: input }]);
-    setInput("");
-  };
-
-  const remove = (id: number) => setTodos(todos.filter((t) => t.id !== id));
+  const add = () => i && (setT([...t, i]), setI(""));
 
   return (
-    <main style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", fontFamily: "Arial", boxShadow: "0 4px 10px rgba(0,0,0,0.1)", borderRadius: "8px" }}>
-      <h2 style={{ textAlign: "center" }}>Todo App</h2>
-      
-      <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
-        <input 
-          style={{ flex: 1, padding: "10px", borderRadius: "4px", border: "1px solid #ddd" }}
-          value={input} 
-          placeholder="Add a task..."
-          onChange={(e) => setInput(e.target.value)} 
-          onKeyDown={(e) => e.key === "Enter" && add()} 
-        />
-        <button onClick={add} style={{ padding: "10px", backgroundColor: "#0070f3", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
-          Add
-        </button>
-      </div>
+    <div style={{width:300,margin:"40px auto",fontFamily:"Arial"}}>
+      <h3>Todo</h3>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {todos.map((t) => (
-          <li key={t.id} style={{ display: "flex", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid #eee", alignItems: "center" }}>
-            <span>{t.text}</span>
-            <button onClick={() => remove(t.id)} style={{ background: "none", border: "none", color: "#ff4444", cursor: "pointer", fontWeight: "bold" }}>
-              ✕
-            </button>
-          </li>
-        ))}
-      </ul>
-    </main>
+      <input
+        value={i}
+        placeholder="task..."
+        onChange={e=>setI(e.target.value)}
+        onKeyDown={e=>e.key==="Enter"&&add()}
+      />
+      <button onClick={add}>Add</button>
+
+      {t.map((x,k)=>(
+        <p key={k} style={{cursor:"pointer"}} onClick={()=>setT(t.filter((_,j)=>j!==k))}>
+          {x} x
+        </p>
+      ))}
+    </div>
   );
 }`;
 
@@ -55,61 +38,68 @@ export default function TodoApp() {
     try {
       await navigator.clipboard.writeText(codeString);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset status after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy!", err);
+      console.error("Copy failed", err);
     }
   };
 
   return (
-    <div style={{ padding: "40px", backgroundColor: "#f9f9f9", minHeight: "100vh", display: "flex", justifyContent: "center" }}>
-      {/* The Card Container */}
+    <div style={{ 
+      display: "flex", 
+      justifyContent: "center", 
+      alignItems: "center", 
+      minHeight: "100vh", 
+      backgroundColor: "#f4f7f6",
+      padding: "20px" 
+    }}>
       <div style={{ 
         width: "100%", 
-        maxWidth: "800px", 
-        backgroundColor: "#1e1e1e", 
-        borderRadius: "12px", 
-        overflow: "hidden", 
-        boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-        position: "relative"
+        maxWidth: "600px", 
+        backgroundColor: "#282c34", 
+        borderRadius: "10px", 
+        boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+        overflow: "hidden"
       }}>
-        
-        {/* Header with Title and Copy Button */}
+        {/* Card Header */}
         <div style={{ 
           display: "flex", 
           justifyContent: "space-between", 
           alignItems: "center", 
-          padding: "12px 20px", 
-          backgroundColor: "#2d2d2d",
-          borderBottom: "1px solid #444"
+          padding: "10px 20px", 
+          backgroundColor: "#21252b",
+          borderBottom: "1px solid #3e4451"
         }}>
-          <span style={{ color: "#aaa", fontSize: "14px", fontFamily: "monospace" }}>page.tsx</span>
+          <span style={{ color: "#abb2bf", fontSize: "13px", fontFamily: "monospace" }}>
+            TodoApp.tsx
+          </span>
           <button 
             onClick={handleCopy}
             style={{
-              padding: "6px 12px",
-              backgroundColor: copied ? "#28a745" : "#444",
-              color: "white",
+              padding: "5px 12px",
+              backgroundColor: copied ? "#98c379" : "#61afef",
+              color: "#282c34",
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
               fontSize: "12px",
-              transition: "background 0.2s"
+              fontWeight: "bold",
+              transition: "all 0.2s ease"
             }}
           >
-            {copied ? "Copied!" : "Copy Code"}
+            {copied ? "Copied!" : "Copy"}
           </button>
         </div>
 
-        {/* Code Block Area */}
+        {/* Code Content */}
         <pre style={{ 
           margin: 0, 
           padding: "20px", 
-          overflowX: "auto", 
-          color: "#d4d4d4", 
+          color: "#abb2bf", 
           fontSize: "14px", 
-          lineHeight: "1.5",
-          fontFamily: "'Courier New', Courier, monospace"
+          overflowX: "auto",
+          fontFamily: "'Fira Code', 'Courier New', monospace",
+          lineHeight: "1.6"
         }}>
           <code>{codeString}</code>
         </pre>
