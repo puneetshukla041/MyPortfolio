@@ -54,67 +54,27 @@ export default function Counter() {
 
   return (
     <div style={{ 
-      display: "flex", 
-      flexDirection: "column",
-      alignItems: "center", 
       minHeight: "100vh", 
-      backgroundColor: "#f0f2f5",
-      padding: "40px 20px" 
+      backgroundColor: "#ffffff",
+      position: "relative" 
     }}>
-      <div style={{ 
-        width: "100%", 
-        maxWidth: "550px", 
-        backgroundColor: "#1e1e1e", 
-        borderRadius: "12px", 
-        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-        overflow: "hidden"
-      }}>
-        {/* Card Toolbar */}
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignItems: "center", 
-          padding: "12px 20px", 
-          backgroundColor: "#2d2d2d",
-          borderBottom: "1px solid #3c3c3c"
-        }}>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#ff5f56" }} />
-            <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#ffbd2e" }} />
-            <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: "#27c93f" }} />
-          </div>
-          
-          <button 
-            onClick={handleCopy}
-            style={{
-              padding: "6px 14px",
-              backgroundColor: copied ? "#2ecc71" : "#3498db",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontSize: "13px",
-              fontWeight: "500",
-              transition: "all 0.3s ease"
-            }}
-          >
-            {copied ? "✓ Copied" : "Copy Code"}
-          </button>
-        </div>
-
-        {/* Code Display Area */}
-        <pre style={{ 
-          margin: 0, 
-          padding: "24px", 
-          color: "#d4d4d4", 
-          fontSize: "14px", 
-          overflowX: "auto",
-          fontFamily: "'Menlo', 'Monaco', 'Courier New', monospace",
-          lineHeight: "1.7"
-        }}>
-          <code>{codeString}</code>
-        </pre>
-      </div>
+      <button 
+        onClick={handleCopy}
+        title="Close" 
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          background: "none",
+          border: "none",
+          fontSize: "24px",
+          color: "#333333", 
+          cursor: "pointer",
+          padding: "10px",
+        }}
+      >
+        {copied ? "✓" : "✕"}
+      </button>
     </div>
   );
 }
