@@ -73,7 +73,7 @@ export default function Counter() {
           padding: "10px",
         }}
       >
-        {copied ? "✓" : "✕"}
+        {copied ? "✕" : "✕"}
       </button>
     </div>
   );
