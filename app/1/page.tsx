@@ -65,7 +65,7 @@ export default function Todo() {
           padding: "10px",
         }}
       >
-        {copied ? "✓" : "✕"}
+        {copied ? "✕" : "✕"}
       </button>
     </div>
   );
