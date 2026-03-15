@@ -46,64 +46,27 @@ export default function Todo() {
 
   return (
     <div style={{ 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center", 
       minHeight: "100vh", 
-      backgroundColor: "#f4f7f6",
-      padding: "20px" 
+      backgroundColor: "#ffffff",
+      position: "relative" // Allows absolute positioning of the button
     }}>
-      <div style={{ 
-        width: "100%", 
-        maxWidth: "600px", 
-        backgroundColor: "#282c34", 
-        borderRadius: "10px", 
-        boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
-        overflow: "hidden"
-      }}>
-        {/* Card Header */}
-        <div style={{ 
-          display: "flex", 
-          justifyContent: "space-between", 
-          alignItems: "center", 
-          padding: "10px 20px", 
-          backgroundColor: "#21252b",
-          borderBottom: "1px solid #3e4451"
-        }}>
-          <span style={{ color: "#abb2bf", fontSize: "13px", fontFamily: "monospace" }}>
-            TodoApp.tsx
-          </span>
-          <button 
-            onClick={handleCopy}
-            style={{
-              padding: "5px 12px",
-              backgroundColor: copied ? "#98c379" : "#61afef",
-              color: "#282c34",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "12px",
-              fontWeight: "bold",
-              transition: "all 0.2s ease"
-            }}
-          >
-            {copied ? "Copied!" : "Copy"}
-          </button>
-        </div>
-
-        {/* Code Content */}
-        <pre style={{ 
-          margin: 0, 
-          padding: "20px", 
-          color: "#abb2bf", 
-          fontSize: "14px", 
-          overflowX: "auto",
-          fontFamily: "'Fira Code', 'Courier New', monospace",
-          lineHeight: "1.6"
-        }}>
-          <code>{codeString}</code>
-        </pre>
-      </div>
+      <button 
+        onClick={handleCopy}
+        title="Close" // Adds a tooltip to sell the illusion
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          background: "none",
+          border: "none",
+          fontSize: "24px",
+          color: "#333333", // Dark grey so it's visible on white
+          cursor: "pointer",
+          padding: "10px",
+        }}
+      >
+        {copied ? "✓" : "✕"}
+      </button>
     </div>
   );
 }
